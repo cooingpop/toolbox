@@ -8,6 +8,8 @@ const CATEGORIES = [
     name: '포맷 & 변환',
     tools: [
       { id: 'json', name: 'JSON 포매터', desc: 'Pretty / Minify / 검증 + 오류 위치 표시' },
+      { id: 'xml', name: 'XML 포매터', desc: '들여쓰기 정리 + 유효성 검사' },
+      { id: 'yaml', name: 'JSON ↔ YAML 변환', desc: '양방향 변환 (자체 구현)' },
     ],
   },
   {
@@ -16,6 +18,8 @@ const CATEGORIES = [
       { id: 'base64', name: 'Base64 인코더/디코더', desc: '텍스트·이미지 ↔ Base64 (UTF-8 안전)' },
       { id: 'url', name: 'URL 인코더/디코더', desc: '컴포넌트/전체 URI 모드' },
       { id: 'jwt', name: 'JWT 디코더', desc: 'header/payload 디코딩 + HMAC 서명 검증' },
+      { id: 'entity', name: 'HTML 엔티티', desc: '&lt; ↔ < 인코딩/디코딩' },
+      { id: 'hex', name: 'Hex ↔ 텍스트', desc: 'UTF-8 바이트 기준 16진수 변환' },
     ],
   },
   {
@@ -23,6 +27,8 @@ const CATEGORIES = [
     tools: [
       { id: 'hash', name: '해시 생성기', desc: 'SHA-1/256/384/512 동시 출력' },
       { id: 'uuid', name: 'UUID 생성기', desc: 'UUID v4, 개수·대소문자 옵션' },
+      { id: 'password', name: '비밀번호 생성기', desc: '암호학적 난수, 길이·문자셋 옵션' },
+      { id: 'hmac', name: 'HMAC 생성기', desc: 'HMAC-SHA256/384/512, hex·Base64' },
     ],
   },
   {
@@ -30,6 +36,7 @@ const CATEGORIES = [
     tools: [
       { id: 'timestamp', name: 'Unix 타임스탬프', desc: '초/밀리초 자동 감지, 타임존·상대시간' },
       { id: 'cron', name: 'Cron 표현식 해석기', desc: '자연어 설명 + 다음 실행 시각' },
+      { id: 'timezone', name: '타임존 변환기', desc: '여러 도시 시각 동시 표시' },
     ],
   },
   {
@@ -37,12 +44,23 @@ const CATEGORIES = [
     tools: [
       { id: 'regex', name: '정규식 테스터', desc: '매치 하이라이트 + 캡처 그룹' },
       { id: 'case', name: '케이스 변환기', desc: 'camel/snake/kebab/Pascal 등 동시 변환' },
+      { id: 'diff', name: '텍스트 Diff 비교', desc: '라인 단위 diff (LCS)' },
+      { id: 'textstats', name: '텍스트 통계', desc: '글자·단어·줄·바이트 수' },
+      { id: 'lines', name: '줄 정렬/중복 제거', desc: 'sort / unique / reverse' },
     ],
   },
   {
     name: '색상 & 디자인',
     tools: [
       { id: 'color', name: '색상 변환기', desc: 'HEX ↔ RGB(A) ↔ HSL(A) 실시간 변환' },
+      { id: 'contrast', name: '대비 검사기 (WCAG)', desc: '대비비율 + AA/AAA 통과 여부' },
+      { id: 'gradient', name: '그라디언트 생성기', desc: 'CSS gradient 코드 + 프리뷰' },
+    ],
+  },
+  {
+    name: '기타',
+    tools: [
+      { id: 'radix', name: '진법 변환기', desc: '2/8/10/16진수 상호 변환 (BigInt)' },
     ],
   },
 ];

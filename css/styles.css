@@ -284,6 +284,12 @@ table.result-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 
 mark { background: var(--mark-bg); color: var(--mark-text); border-radius: 2px; padding: 0 1px; }
 
+/* Diff 라인 */
+.diff-line { display: block; padding: 0 6px; border-radius: 2px; }
+.diff-add { background: rgba(22, 163, 74, 0.14); color: var(--success); }
+.diff-del { background: rgba(220, 38, 38, 0.12); color: var(--error); text-decoration: line-through; text-decoration-thickness: 1px; }
+.diff-same { color: var(--text-muted); }
+
 .swatch {
   width: 100%;
   height: 90px;

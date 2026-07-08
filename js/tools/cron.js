@@ -255,7 +255,7 @@ function offsetAt(ts, timeZone) {
 }
 
 // 타임존의 벽시계 시각 → UTC 타임스탬프. DST 갭(존재하지 않는 시각)이면 null.
-function wallToInstant(y, mo, d, h, mi, s, timeZone) {
+export function wallToInstant(y, mo, d, h, mi, s, timeZone) {
   const utcGuess = Date.UTC(y, mo - 1, d, h, mi, s);
   let ts = utcGuess - offsetAt(utcGuess, timeZone);
   ts = utcGuess - offsetAt(ts, timeZone);
