@@ -101,17 +101,10 @@ function initTheme() {
   updateLabel();
 }
 
-/* ----- 사이드바 (검색 + 카테고리 그룹) ----- */
+/* ----- 사이드바 (카테고리 그룹) ----- */
 function renderSidebar() {
   const sidebar = $('#sidebar');
-  sidebar.innerHTML = `
-    <div class="nav-search">
-      <input type="search" id="tool-search" placeholder="도구 검색  ( / )" autocomplete="off" aria-label="도구 검색">
-    </div>
-    <div id="nav-groups"></div>
-    <p class="nav-empty" id="nav-empty" hidden>검색 결과가 없습니다</p>
-  `;
-  const groupsBox = $('#nav-groups', sidebar);
+  const frag = document.createDocumentFragment();
   for (const cat of CATEGORIES) {
     const group = document.createElement('div');
     group.className = 'nav-group';
@@ -121,52 +114,103 @@ function renderSidebar() {
       link.className = 'nav-link';
       link.href = `#${tool.id}`;
       link.dataset.tool = tool.id;
-      link.dataset.search = `${tool.name} ${tool.desc} ${tool.id}`.toLowerCase();
       link.innerHTML = `<span class="nav-icon" aria-hidden="true">${tool.icon}</span><span class="nav-name"></span>`;
       link.querySelector('.nav-name').textContent = tool.name;
       group.appendChild(link);
     }
-    groupsBox.appendChild(group);
+    frag.appendChild(group);
   }
+  sidebar.appendChild(frag);
+}
 
-  // 검색 필터
-  const search = $('#tool-search', sidebar);
-  search.addEventListener('input', () => {
-    const q = search.value.trim().toLowerCase();
-    let any = false;
-    for (const group of $$('.nav-group', sidebar)) {
-      let visible = 0;
-      for (const link of $$('.nav-link', group)) {
-        const match = !q || link.dataset.search.includes(q);
-        link.hidden = !match;
-        if (match) visible++;
-      }
-      group.hidden = visible === 0;
-      if (visible) any = true;
+/* ----- 상단바 도구 검색 (드롭다운 결과) ----- */
+function initSearch() {
+  const input = $('#tool-search');
+  const panel = $('#search-results');
+  const allTools = [...toolIndex.values()];
+  let items = [];
+  let active = -1;
+
+  const close = () => {
+    panel.hidden = true;
+    input.setAttribute('aria-expanded', 'false');
+    items = [];
+    active = -1;
+  };
+
+  const highlight = () => {
+    panel.querySelectorAll('.search-item').forEach((el, i) => {
+      el.classList.toggle('active', i === active);
+    });
+  };
+
+  const render = () => {
+    const q = input.value.trim().toLowerCase();
+    if (!q) { close(); return; }
+    items = allTools.filter((t) => `${t.name} ${t.desc} ${t.id} ${t.category}`.toLowerCase().includes(q)).slice(0, 8);
+    if (!items.length) {
+      panel.innerHTML = '<div class="search-empty">검색 결과가 없습니다</div>';
+      panel.hidden = false;
+      input.setAttribute('aria-expanded', 'true');
+      active = -1;
+      return;
     }
-    $('#nav-empty', sidebar).hidden = any;
-  });
-  search.addEventListener('keydown', (e) => {
+    panel.innerHTML = items.map((t, i) => `
+      <a href="#${t.id}" class="search-item" role="option" data-index="${i}">
+        <span class="nav-icon" aria-hidden="true">${t.icon}</span>
+        <span class="si-body"><span class="si-name"></span><span class="si-cat"></span></span>
+      </a>`).join('');
+    panel.querySelectorAll('.search-item').forEach((el, i) => {
+      el.querySelector('.si-name').textContent = items[i].name;
+      el.querySelector('.si-cat').textContent = items[i].category;
+    });
+    active = 0;
+    highlight();
+    panel.hidden = false;
+    input.setAttribute('aria-expanded', 'true');
+  };
+
+  const go = (index) => {
+    if (index < 0 || !items[index]) return;
+    location.hash = `#${items[index].id}`;
+    input.value = '';
+    close();
+    input.blur();
+  };
+
+  input.addEventListener('input', render);
+  input.addEventListener('focus', render);
+  input.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      search.value = '';
-      search.dispatchEvent(new Event('input'));
-      search.blur();
-    }
-    if (e.key === 'Enter') {
-      const first = sidebar.querySelector('.nav-link:not([hidden])');
-      if (first) { location.hash = `#${first.dataset.tool}`; search.blur(); }
+      input.value = '';
+      close();
+      input.blur();
+    } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (!items.length) return;
+      e.preventDefault();
+      active = (active + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+      highlight();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      go(active);
     }
   });
+  // 클릭 네비게이션 (blur보다 먼저 처리되도록 mousedown 사용)
+  panel.addEventListener('mousedown', (e) => {
+    const item = e.target.closest('.search-item');
+    if (!item) return;
+    e.preventDefault();
+    go(Number(item.dataset.index));
+  });
+  input.addEventListener('blur', () => setTimeout(close, 150));
 
-  // "/" 또는 Ctrl/Cmd+K로 검색 포커스
+  // "/" 또는 Ctrl/Cmd+K로 검색 포커스 (상단바라 모바일에서도 항상 보임)
   document.addEventListener('keydown', (e) => {
     const editing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName ?? '');
     if ((e.key === '/' && !editing) || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) {
       e.preventDefault();
-      $('#sidebar').classList.add('open'); // 모바일에서도 열리게
-      $('#sidebar-backdrop').hidden = false;
-      search.focus();
-      search.select();
+      input.focus();
+      input.select();
     }
   });
 }
@@ -222,6 +266,7 @@ async function route() {
 
 initTheme();
 renderSidebar();
+initSearch();
 initMobileNav();
 window.addEventListener('hashchange', route);
 route();

@@ -88,6 +88,45 @@ code { font-family: var(--code-font); font-size: 0.92em; background: var(--bg-el
 .brand:hover { text-decoration: none; color: var(--accent); }
 .topbar-spacer { flex: 1; }
 
+/* 상단바 도구 검색 */
+.topbar-search { position: relative; flex: 1; max-width: 400px; margin-left: 10px; }
+.topbar-search input {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: 13.5px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.topbar-search input:focus { background: var(--bg); }
+.search-results {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 60;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+}
+.search-results[hidden] { display: none; }
+.search-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  color: var(--text);
+}
+.search-item:hover { text-decoration: none; }
+.search-item:hover, .search-item.active { background: var(--accent-soft); }
+.search-item .si-body { display: flex; flex-direction: column; min-width: 0; }
+.search-item .si-name { font-size: 13.5px; font-weight: 600; }
+.search-item .si-cat { font-size: 11px; color: var(--text-muted); }
+.search-empty { padding: 12px 14px; font-size: 13px; color: var(--text-muted); }
+
 .icon-btn {
   display: inline-flex;
   align-items: center;
@@ -127,8 +166,7 @@ code { font-family: var(--code-font); font-size: 0.92em; background: var(--bg-el
 .sidebar {
   width: var(--sidebar-w);
   flex-shrink: 0;
-  /* 상단 패딩 없음: sticky 검색창이 최상단에 밀착해야 스크롤된 메뉴가 위 틈으로 비치지 않는다 */
-  padding: 0 10px 32px;
+  padding: 8px 10px 32px;
   border-right: 1px solid var(--border);
   background: var(--bg-elevated);
   position: sticky;
@@ -140,22 +178,6 @@ code { font-family: var(--code-font); font-size: 0.92em; background: var(--bg-el
 }
 .sidebar::-webkit-scrollbar { width: 6px; }
 .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-.nav-search {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  padding: 12px 2px 10px; /* 사이드바 상단 여백을 검색창 안쪽 패딩으로 흡수 (배경이 덮음) */
-  background: var(--bg-elevated);
-  box-shadow: 0 6px 8px -6px rgba(0, 0, 0, 0.18);
-}
-.nav-search input {
-  min-height: 38px;
-  font-size: 13px;
-  background: var(--bg);
-  border-radius: 10px;
-}
-.nav-empty { padding: 12px 10px; font-size: 13px; color: var(--text-muted); }
 
 .nav-group { margin-bottom: 4px; }
 .nav-category {
@@ -493,6 +515,8 @@ mark { background: var(--mark-bg); color: var(--mark-text); border-radius: 2px; 
 /* ----- 반응형 ----- */
 @media (max-width: 768px) {
   #nav-toggle { display: inline-flex; }
+  .brand span { display: none; } /* 좁은 화면에서는 로고만 남기고 검색창에 공간 양보 */
+  .topbar-search { max-width: none; margin-left: 2px; }
   .sidebar {
     position: fixed;
     top: var(--topbar-h);
