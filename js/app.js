@@ -10,6 +10,7 @@ const CATEGORIES = [
       { id: 'json', name: 'JSON 포매터', desc: 'Pretty / Minify / 검증 + 오류 위치 표시' },
       { id: 'xml', name: 'XML 포매터', desc: '들여쓰기 정리 + 유효성 검사' },
       { id: 'yaml', name: 'JSON ↔ YAML 변환', desc: '양방향 변환 (자체 구현)' },
+      { id: 'sql', name: 'SQL 포매터', desc: '키워드 개행/들여쓰기 정리' },
     ],
   },
   {
@@ -20,6 +21,7 @@ const CATEGORIES = [
       { id: 'jwt', name: 'JWT 디코더', desc: 'header/payload 디코딩 + HMAC 서명 검증' },
       { id: 'entity', name: 'HTML 엔티티', desc: '&lt; ↔ < 인코딩/디코딩' },
       { id: 'hex', name: 'Hex ↔ 텍스트', desc: 'UTF-8 바이트 기준 16진수 변환' },
+      { id: 'unicode', name: 'Unicode 이스케이프', desc: '\\uXXXX ↔ 문자 변환' },
     ],
   },
   {
@@ -29,6 +31,7 @@ const CATEGORIES = [
       { id: 'uuid', name: 'UUID 생성기', desc: 'UUID v4, 개수·대소문자 옵션' },
       { id: 'password', name: '비밀번호 생성기', desc: '암호학적 난수, 길이·문자셋 옵션' },
       { id: 'hmac', name: 'HMAC 생성기', desc: 'HMAC-SHA256/384/512, hex·Base64' },
+      { id: 'md5', name: 'MD5 해시', desc: '순수 JS 구현 (체크섬·레거시용)' },
     ],
   },
   {
@@ -37,6 +40,7 @@ const CATEGORIES = [
       { id: 'timestamp', name: 'Unix 타임스탬프', desc: '초/밀리초 자동 감지, 타임존·상대시간' },
       { id: 'cron', name: 'Cron 표현식 해석기', desc: '자연어 설명 + 다음 실행 시각' },
       { id: 'timezone', name: '타임존 변환기', desc: '여러 도시 시각 동시 표시' },
+      { id: 'datediff', name: '날짜 차이 계산기', desc: '두 날짜 사이 일/시/분 + 달력 기준' },
     ],
   },
   {
@@ -47,6 +51,7 @@ const CATEGORIES = [
       { id: 'diff', name: '텍스트 Diff 비교', desc: '라인 단위 diff (LCS)' },
       { id: 'textstats', name: '텍스트 통계', desc: '글자·단어·줄·바이트 수' },
       { id: 'lines', name: '줄 정렬/중복 제거', desc: 'sort / unique / reverse' },
+      { id: 'lorem', name: 'Lorem Ipsum 생성기', desc: '문단·문장·단어 단위 채움 텍스트' },
     ],
   },
   {
@@ -55,12 +60,16 @@ const CATEGORIES = [
       { id: 'color', name: '색상 변환기', desc: 'HEX ↔ RGB(A) ↔ HSL(A) 실시간 변환' },
       { id: 'contrast', name: '대비 검사기 (WCAG)', desc: '대비비율 + AA/AAA 통과 여부' },
       { id: 'gradient', name: '그라디언트 생성기', desc: 'CSS gradient 코드 + 프리뷰' },
+      { id: 'bezier', name: 'Cubic-bezier 에디터', desc: '드래그 곡선 + CSS 타이밍 함수' },
+      { id: 'boxshadow', name: 'box-shadow 생성기', desc: '다중 레이어 그림자 + 프리뷰' },
     ],
   },
   {
     name: '기타',
     tools: [
       { id: 'radix', name: '진법 변환기', desc: '2/8/10/16진수 상호 변환 (BigInt)' },
+      { id: 'qrcode', name: 'QR 코드 생성기', desc: '텍스트·URL → QR (PNG 다운로드)' },
+      { id: 'imageresize', name: '이미지 리사이즈/압축', desc: 'Canvas 기반, JPEG/WebP/PNG' },
     ],
   },
 ];
@@ -74,11 +83,20 @@ const initialized = new Set();
 
 /* ----- 테마 ----- */
 function initTheme() {
-  $('#theme-toggle').addEventListener('click', () => {
+  const button = $('#theme-toggle');
+  // 라벨은 "지금 누르면 어떤 모드로 바뀌는지"를 안내
+  const updateLabel = () => {
+    const label = document.documentElement.dataset.theme === 'dark' ? '라이트모드로 전환' : '다크모드로 전환';
+    button.setAttribute('aria-label', label);
+    button.title = label;
+  };
+  button.addEventListener('click', () => {
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
     try { localStorage.setItem(THEME_KEY, next); } catch { /* 프라이빗 모드 등 */ }
+    updateLabel();
   });
+  updateLabel();
 }
 
 /* ----- 사이드바 ----- */
