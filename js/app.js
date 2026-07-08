@@ -102,8 +102,10 @@ function applyLanguage() {
     card.querySelector('.card-desc').textContent = tDesc(tool);
     card.querySelector('.card-cat').textContent = tCat(tool);
   }
-  const about = $('.home-about');
-  if (about) about.hidden = lang === 'en'; // 소개 문단은 한국어 원문 (EN 모드에서는 숨김)
+  // 소개 푸터: 언어에 맞는 문단만 표시
+  const aboutTitle = $('#about-title');
+  if (aboutTitle) aboutTitle.textContent = lang === 'en' ? 'About DevTools Hub' : 'DevTools Hub 소개';
+  for (const p of $$('.home-about [data-lang]')) p.hidden = p.dataset.lang !== lang;
   // 검색
   $('#tool-search').placeholder = t('searchPlaceholder');
   // 언어 버튼
