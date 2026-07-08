@@ -7,6 +7,17 @@ const CHO = ['g', 'kk', 'n', 'd', 'tt', 'r', 'm', 'b', 'pp', 's', 'ss', '', 'j',
 const JUNG = ['a', 'ae', 'ya', 'yae', 'eo', 'e', 'yeo', 'ye', 'o', 'wa', 'wae', 'oe', 'yo', 'u', 'wo', 'we', 'wi', 'yu', 'eu', 'ui', 'i'];
 const JONG = ['', 'k', 'k', 'k', 'n', 'n', 'n', 't', 'l', 'k', 'm', 'l', 'l', 'l', 'p', 'l', 'm', 'p', 'p', 't', 't', 'ng', 't', 't', 'k', 't', 'p', 't'];
 
+// 낱자모 (ㅇㅇ, ㅋㅋㅋ 같은 완성형이 아닌 입력도 변환되도록)
+const JAMO = {
+  'ㄱ': 'g', 'ㄲ': 'kk', 'ㄳ': 'gs', 'ㄴ': 'n', 'ㄵ': 'nj', 'ㄶ': 'nh', 'ㄷ': 'd', 'ㄸ': 'tt',
+  'ㄹ': 'r', 'ㄺ': 'lg', 'ㄻ': 'lm', 'ㄼ': 'lb', 'ㄽ': 'ls', 'ㄾ': 'lt', 'ㄿ': 'lp', 'ㅀ': 'lh',
+  'ㅁ': 'm', 'ㅂ': 'b', 'ㅄ': 'bs', 'ㅃ': 'pp', 'ㅅ': 's', 'ㅆ': 'ss', 'ㅇ': 'ng', 'ㅈ': 'j',
+  'ㅉ': 'jj', 'ㅊ': 'ch', 'ㅋ': 'k', 'ㅌ': 't', 'ㅍ': 'p', 'ㅎ': 'h',
+  'ㅏ': 'a', 'ㅐ': 'ae', 'ㅑ': 'ya', 'ㅒ': 'yae', 'ㅓ': 'eo', 'ㅔ': 'e', 'ㅕ': 'yeo', 'ㅖ': 'ye',
+  'ㅗ': 'o', 'ㅘ': 'wa', 'ㅙ': 'wae', 'ㅚ': 'oe', 'ㅛ': 'yo', 'ㅜ': 'u', 'ㅝ': 'wo', 'ㅞ': 'we',
+  'ㅟ': 'wi', 'ㅠ': 'yu', 'ㅡ': 'eu', 'ㅢ': 'ui', 'ㅣ': 'i',
+};
+
 export function romanizeHangul(text) {
   let out = '';
   for (const ch of text) {
@@ -14,6 +25,8 @@ export function romanizeHangul(text) {
     if (code >= 0xac00 && code <= 0xd7a3) {
       const idx = code - 0xac00;
       out += CHO[Math.floor(idx / 588)] + JUNG[Math.floor((idx % 588) / 28)] + JONG[idx % 28];
+    } else if (JAMO[ch]) {
+      out += JAMO[ch];
     } else {
       out += ch;
     }
@@ -73,12 +86,29 @@ export function init(container) {
   const input = $('#slug-input', container);
 
   function run() {
+    const hangul = $('#slug-hangul', container).value;
     const slug = slugify(input.value, {
       separator: $('#slug-sep', container).value,
-      hangul: $('#slug-hangul', container).value,
+      hangul,
     });
-    $('#slug-output', container).textContent = slug;
-    $('#slug-len', container).textContent = slug ? `${slug.length}자` : '';
+    const output = $('#slug-output', container);
+    const info = $('#slug-len', container);
+    if (slug) {
+      output.textContent = slug;
+      output.classList.remove('hint');
+      info.textContent = `${slug.length}자`;
+    } else if (input.value.trim()) {
+      // 입력은 있는데 결과가 빈 경우: 이유를 설명
+      output.textContent = hangul === 'remove'
+        ? '(결과 없음 — "한글 제거" 옵션이라 남는 영문/숫자가 없습니다. "로마자 변환"으로 바꿔보세요)'
+        : '(결과 없음 — 영문/숫자로 바꿀 수 있는 문자가 없습니다)';
+      output.classList.add('hint');
+      info.textContent = '';
+    } else {
+      output.textContent = '';
+      output.classList.remove('hint');
+      info.textContent = '';
+    }
   }
 
   input.addEventListener('input', debounce(run, 150));
