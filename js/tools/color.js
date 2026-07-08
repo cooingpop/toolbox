@@ -82,16 +82,38 @@ export function rgbToHsl(r, g, b) {
   return { h, s: Math.round(s * 100), l: Math.round(l * 100) };
 }
 
+// sRGB → OKLCH (Björn Ottosson의 OKLab 변환식)
+export function rgbToOklch(r, g, b) {
+  const lin = (v) => {
+    const s = v / 255;
+    return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  };
+  const [lr, lg, lb] = [lin(r), lin(g), lin(b)];
+  const l_ = Math.cbrt(0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb);
+  const m_ = Math.cbrt(0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb);
+  const s_ = Math.cbrt(0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb);
+  const L = 0.2104542553 * l_ + 0.793617785 * m_ - 0.0040720468 * s_;
+  const A = 1.9779984951 * l_ - 2.428592205 * m_ + 0.4505937099 * s_;
+  const B = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.808675766 * s_;
+  const C = Math.sqrt(A * A + B * B);
+  let H = (Math.atan2(B, A) * 180) / Math.PI;
+  if (H < 0) H += 360;
+  return { L, C, H: C < 1e-6 ? 0 : H }; // 무채색이면 hue 0으로 고정
+}
+
 const toHex2 = (n) => n.toString(16).padStart(2, '0');
 
 export function formatAll({ r, g, b, a }) {
   const { h, s, l } = rgbToHsl(r, g, b);
+  const { L, C, H } = rgbToOklch(r, g, b);
   const alpha = Math.round(a * 1000) / 1000;
   const hasAlpha = a < 1;
+  const oklchBase = `${(L * 100).toFixed(1)}% ${C.toFixed(3)} ${H.toFixed(1)}`;
   return {
     hex: `#${toHex2(r)}${toHex2(g)}${toHex2(b)}${hasAlpha ? toHex2(Math.round(a * 255)) : ''}`,
     rgb: hasAlpha ? `rgba(${r}, ${g}, ${b}, ${alpha})` : `rgb(${r}, ${g}, ${b})`,
     hsl: hasAlpha ? `hsla(${h}, ${s}%, ${l}%, ${alpha})` : `hsl(${h}, ${s}%, ${l}%)`,
+    oklch: hasAlpha ? `oklch(${oklchBase} / ${alpha})` : `oklch(${oklchBase})`,
   };
 }
 
@@ -99,7 +121,7 @@ export function init(container) {
   container.innerHTML = `
     <div class="tool-header">
       <h2>색상 변환기</h2>
-      <p class="tool-desc">HEX(<code>#RGB</code>, <code>#RRGGBB</code>, <code>#RRGGBBAA</code>) · <code>rgb()/rgba()</code> · <code>hsl()/hsla()</code> 상호 변환.</p>
+      <p class="tool-desc">HEX(<code>#RGB</code>, <code>#RRGGBB</code>, <code>#RRGGBBAA</code>) · <code>rgb()/rgba()</code> · <code>hsl()/hsla()</code> 상호 변환 + <code>oklch()</code> 출력.</p>
     </div>
     <div class="card">
       <div class="row">
@@ -115,6 +137,7 @@ export function init(container) {
       <div class="output-row"><span class="output-label">HEX</span><div class="output-box" id="color-hex"></div><button class="btn btn-sm" data-copy-target="#color-hex">복사</button></div>
       <div class="output-row"><span class="output-label">RGB</span><div class="output-box" id="color-rgb"></div><button class="btn btn-sm" data-copy-target="#color-rgb">복사</button></div>
       <div class="output-row"><span class="output-label">HSL</span><div class="output-box" id="color-hsl"></div><button class="btn btn-sm" data-copy-target="#color-hsl">복사</button></div>
+      <div class="output-row"><span class="output-label">OKLCH</span><div class="output-box" id="color-oklch"></div><button class="btn btn-sm" data-copy-target="#color-oklch">복사</button></div>
     </div>
   `;
 
@@ -128,6 +151,7 @@ export function init(container) {
     $('#color-hex', container).textContent = out.hex;
     $('#color-rgb', container).textContent = out.rgb;
     $('#color-hsl', container).textContent = out.hsl;
+    $('#color-oklch', container).textContent = out.oklch;
     swatch.style.setProperty('--swatch-color', out.rgb);
     if (color.a === 1) picker.value = out.hex;
   }

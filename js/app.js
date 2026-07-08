@@ -1,5 +1,5 @@
-// 앱 셸: 라우팅(해시 기반), 사이드바, 테마 토글, 홈 그리드
-import { $, $$ } from './utils/dom.js';
+// 앱 셸: 라우팅(해시 기반), 사이드바(검색 포함), 테마 토글, 홈 그리드
+import { $, $$, escapeHtml } from './utils/dom.js';
 
 const THEME_KEY = 'devtools-hub-theme';
 
@@ -7,69 +7,69 @@ const CATEGORIES = [
   {
     name: '포맷 & 변환',
     tools: [
-      { id: 'json', name: 'JSON 포매터', desc: 'Pretty / Minify / 검증 + 오류 위치 표시' },
-      { id: 'xml', name: 'XML 포매터', desc: '들여쓰기 정리 + 유효성 검사' },
-      { id: 'yaml', name: 'JSON ↔ YAML 변환', desc: '양방향 변환 (자체 구현)' },
-      { id: 'sql', name: 'SQL 포매터', desc: '키워드 개행/들여쓰기 정리' },
+      { id: 'json', icon: '🧾', name: 'JSON 포매터', desc: 'Pretty / Minify / 검증 + 트리 뷰' },
+      { id: 'xml', icon: '📐', name: 'XML 포매터', desc: '들여쓰기 정리 + 유효성 검사' },
+      { id: 'yaml', icon: '🔁', name: 'JSON ↔ YAML 변환', desc: '양방향 변환 (자체 구현)' },
+      { id: 'sql', icon: '🗃️', name: 'SQL 포매터', desc: '키워드 개행/들여쓰기 정리' },
     ],
   },
   {
     name: '인코딩 & 디코딩',
     tools: [
-      { id: 'base64', name: 'Base64 인코더/디코더', desc: '텍스트·이미지 ↔ Base64 (UTF-8 안전)' },
-      { id: 'url', name: 'URL 인코더/디코더', desc: '컴포넌트/전체 URI 모드' },
-      { id: 'jwt', name: 'JWT 디코더', desc: 'header/payload 디코딩 + HMAC 서명 검증' },
-      { id: 'entity', name: 'HTML 엔티티', desc: '&lt; ↔ < 인코딩/디코딩' },
-      { id: 'hex', name: 'Hex ↔ 텍스트', desc: 'UTF-8 바이트 기준 16진수 변환' },
-      { id: 'unicode', name: 'Unicode 이스케이프', desc: '\\uXXXX ↔ 문자 변환' },
+      { id: 'base64', icon: '🔤', name: 'Base64 인코더/디코더', desc: '텍스트·이미지 ↔ Base64 (UTF-8 안전)' },
+      { id: 'url', icon: '🔗', name: 'URL 인코더/디코더', desc: '컴포넌트/전체 URI 모드' },
+      { id: 'jwt', icon: '🎫', name: 'JWT 디코더', desc: 'header/payload 디코딩 + HMAC 서명 검증' },
+      { id: 'entity', icon: '🏷️', name: 'HTML 엔티티', desc: '&lt; ↔ < 인코딩/디코딩' },
+      { id: 'hex', icon: '🔢', name: 'Hex ↔ 텍스트', desc: 'UTF-8 바이트 기준 16진수 변환' },
+      { id: 'unicode', icon: '✳️', name: 'Unicode 이스케이프', desc: '\\uXXXX ↔ 문자 변환' },
     ],
   },
   {
     name: '해시 & 생성',
     tools: [
-      { id: 'hash', name: '해시 생성기', desc: 'SHA-1/256/384/512 동시 출력' },
-      { id: 'uuid', name: 'UUID 생성기', desc: 'UUID v4, 개수·대소문자 옵션' },
-      { id: 'password', name: '비밀번호 생성기', desc: '암호학적 난수, 길이·문자셋 옵션' },
-      { id: 'hmac', name: 'HMAC 생성기', desc: 'HMAC-SHA256/384/512, hex·Base64' },
-      { id: 'md5', name: 'MD5 해시', desc: '순수 JS 구현 (체크섬·레거시용)' },
+      { id: 'hash', icon: '🔒', name: '해시 생성기', desc: 'SHA-1/256/384/512 동시 출력' },
+      { id: 'uuid', icon: '🆔', name: 'UUID 생성기', desc: 'UUID v4, 개수·대소문자 옵션' },
+      { id: 'password', icon: '🔑', name: '비밀번호 생성기', desc: '암호학적 난수, 길이·문자셋 옵션' },
+      { id: 'hmac', icon: '🛡️', name: 'HMAC 생성기', desc: 'HMAC-SHA256/384/512, hex·Base64' },
+      { id: 'md5', icon: '🧮', name: 'MD5 해시', desc: '순수 JS 구현 (체크섬·레거시용)' },
     ],
   },
   {
     name: '시간 & 날짜',
     tools: [
-      { id: 'timestamp', name: 'Unix 타임스탬프', desc: '초/밀리초 자동 감지, 타임존·상대시간' },
-      { id: 'cron', name: 'Cron 표현식 해석기', desc: '자연어 설명 + 다음 실행 시각' },
-      { id: 'timezone', name: '타임존 변환기', desc: '여러 도시 시각 동시 표시' },
-      { id: 'datediff', name: '날짜 차이 계산기', desc: '두 날짜 사이 일/시/분 + 달력 기준' },
+      { id: 'timestamp', icon: '⏱️', name: 'Unix 타임스탬프', desc: '초/밀리초 자동 감지, 타임존·상대시간' },
+      { id: 'cron', icon: '⏰', name: 'Cron 표현식 해석기', desc: '자연어 설명 + 다음 실행 시각' },
+      { id: 'timezone', icon: '🌍', name: '타임존 변환기', desc: '여러 도시 시각 동시 표시' },
+      { id: 'datediff', icon: '📅', name: '날짜 차이 계산기', desc: '두 날짜 사이 일/시/분 + 달력 기준' },
     ],
   },
   {
     name: '텍스트 & 정규식',
     tools: [
-      { id: 'regex', name: '정규식 테스터', desc: '매치 하이라이트 + 캡처 그룹' },
-      { id: 'case', name: '케이스 변환기', desc: 'camel/snake/kebab/Pascal 등 동시 변환' },
-      { id: 'diff', name: '텍스트 Diff 비교', desc: '라인 단위 diff (LCS)' },
-      { id: 'textstats', name: '텍스트 통계', desc: '글자·단어·줄·바이트 수' },
-      { id: 'lines', name: '줄 정렬/중복 제거', desc: 'sort / unique / reverse' },
-      { id: 'lorem', name: 'Lorem Ipsum 생성기', desc: '문단·문장·단어 단위 채움 텍스트' },
+      { id: 'regex', icon: '🎯', name: '정규식 테스터', desc: '매치 하이라이트 + 캡처 그룹' },
+      { id: 'case', icon: '🔠', name: '케이스 변환기', desc: 'camel/snake/kebab/Pascal 등 동시 변환' },
+      { id: 'diff', icon: '🔀', name: '텍스트 Diff 비교', desc: '라인 단위 diff (LCS)' },
+      { id: 'textstats', icon: '📊', name: '텍스트 통계', desc: '글자·단어·줄·바이트 수' },
+      { id: 'lines', icon: '📑', name: '줄 정렬/중복 제거', desc: 'sort / unique / reverse' },
+      { id: 'lorem', icon: '📝', name: 'Lorem Ipsum 생성기', desc: '문단·문장·단어 단위 채움 텍스트' },
     ],
   },
   {
     name: '색상 & 디자인',
     tools: [
-      { id: 'color', name: '색상 변환기', desc: 'HEX ↔ RGB(A) ↔ HSL(A) 실시간 변환' },
-      { id: 'contrast', name: '대비 검사기 (WCAG)', desc: '대비비율 + AA/AAA 통과 여부' },
-      { id: 'gradient', name: '그라디언트 생성기', desc: 'CSS gradient 코드 + 프리뷰' },
-      { id: 'bezier', name: 'Cubic-bezier 에디터', desc: '드래그 곡선 + CSS 타이밍 함수' },
-      { id: 'boxshadow', name: 'box-shadow 생성기', desc: '다중 레이어 그림자 + 프리뷰' },
+      { id: 'color', icon: '🎨', name: '색상 변환기', desc: 'HEX ↔ RGB(A) ↔ HSL(A) + OKLCH' },
+      { id: 'contrast', icon: '🌓', name: '대비 검사기 (WCAG)', desc: '대비비율 + AA/AAA 통과 여부' },
+      { id: 'gradient', icon: '🌈', name: '그라디언트 생성기', desc: 'CSS gradient 코드 + 프리뷰' },
+      { id: 'bezier', icon: '〰️', name: 'Cubic-bezier 에디터', desc: '드래그 곡선 + CSS 타이밍 함수' },
+      { id: 'boxshadow', icon: '🔲', name: 'box-shadow 생성기', desc: '다중 레이어 그림자 + 프리뷰' },
     ],
   },
   {
     name: '기타',
     tools: [
-      { id: 'radix', name: '진법 변환기', desc: '2/8/10/16진수 상호 변환 (BigInt)' },
-      { id: 'qrcode', name: 'QR 코드 생성기', desc: '텍스트·URL → QR (PNG 다운로드)' },
-      { id: 'imageresize', name: '이미지 리사이즈/압축', desc: 'Canvas 기반, JPEG/WebP/PNG' },
+      { id: 'radix', icon: '🔟', name: '진법 변환기', desc: '2/8/10/16진수 상호 변환 (BigInt)' },
+      { id: 'qrcode', icon: '🔳', name: 'QR 코드 생성기', desc: '텍스트·URL → QR (PNG 다운로드)' },
+      { id: 'imageresize', icon: '🖼️', name: '이미지 리사이즈/압축', desc: 'Canvas 기반, JPEG/WebP/PNG' },
     ],
   },
 ];
@@ -99,25 +99,74 @@ function initTheme() {
   updateLabel();
 }
 
-/* ----- 사이드바 ----- */
+/* ----- 사이드바 (검색 + 카테고리 그룹) ----- */
 function renderSidebar() {
   const sidebar = $('#sidebar');
-  const frag = document.createDocumentFragment();
+  sidebar.innerHTML = `
+    <div class="nav-search">
+      <input type="search" id="tool-search" placeholder="도구 검색  ( / )" autocomplete="off" aria-label="도구 검색">
+    </div>
+    <div id="nav-groups"></div>
+    <p class="nav-empty" id="nav-empty" hidden>검색 결과가 없습니다</p>
+  `;
+  const groupsBox = $('#nav-groups', sidebar);
   for (const cat of CATEGORIES) {
-    const heading = document.createElement('div');
-    heading.className = 'nav-category';
-    heading.textContent = cat.name;
-    frag.appendChild(heading);
+    const group = document.createElement('div');
+    group.className = 'nav-group';
+    group.innerHTML = `<div class="nav-category">${escapeHtml(cat.name)}</div>`;
     for (const tool of cat.tools) {
       const link = document.createElement('a');
       link.className = 'nav-link';
       link.href = `#${tool.id}`;
-      link.textContent = tool.name;
       link.dataset.tool = tool.id;
-      frag.appendChild(link);
+      link.dataset.search = `${tool.name} ${tool.desc} ${tool.id}`.toLowerCase();
+      link.innerHTML = `<span class="nav-icon" aria-hidden="true">${tool.icon}</span><span class="nav-name"></span>`;
+      link.querySelector('.nav-name').textContent = tool.name;
+      group.appendChild(link);
     }
+    groupsBox.appendChild(group);
   }
-  sidebar.appendChild(frag);
+
+  // 검색 필터
+  const search = $('#tool-search', sidebar);
+  search.addEventListener('input', () => {
+    const q = search.value.trim().toLowerCase();
+    let any = false;
+    for (const group of $$('.nav-group', sidebar)) {
+      let visible = 0;
+      for (const link of $$('.nav-link', group)) {
+        const match = !q || link.dataset.search.includes(q);
+        link.hidden = !match;
+        if (match) visible++;
+      }
+      group.hidden = visible === 0;
+      if (visible) any = true;
+    }
+    $('#nav-empty', sidebar).hidden = any;
+  });
+  search.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      search.value = '';
+      search.dispatchEvent(new Event('input'));
+      search.blur();
+    }
+    if (e.key === 'Enter') {
+      const first = sidebar.querySelector('.nav-link:not([hidden])');
+      if (first) { location.hash = `#${first.dataset.tool}`; search.blur(); }
+    }
+  });
+
+  // "/" 또는 Ctrl/Cmd+K로 검색 포커스
+  document.addEventListener('keydown', (e) => {
+    const editing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName ?? '');
+    if ((e.key === '/' && !editing) || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) {
+      e.preventDefault();
+      $('#sidebar').classList.add('open'); // 모바일에서도 열리게
+      $('#sidebar-backdrop').hidden = false;
+      search.focus();
+      search.select();
+    }
+  });
 }
 
 function initMobileNav() {
@@ -144,9 +193,16 @@ function renderHome() {
     const card = document.createElement('a');
     card.className = 'home-card';
     card.href = `#${id}`;
-    card.innerHTML = `<div class="card-title"></div><div class="card-cat"></div>`;
+    card.innerHTML = `
+      <div class="card-head">
+        <span class="card-icon" aria-hidden="true">${tool.icon}</span>
+        <span class="card-title"></span>
+      </div>
+      <div class="card-desc"></div>
+      <div class="card-cat"></div>`;
     card.querySelector('.card-title').textContent = tool.name;
-    card.querySelector('.card-cat').textContent = `${tool.category} · ${tool.desc}`;
+    card.querySelector('.card-desc').textContent = tool.desc;
+    card.querySelector('.card-cat').textContent = tool.category;
     frag.appendChild(card);
   }
   grid.appendChild(frag);
@@ -170,7 +226,7 @@ async function route() {
       const mod = await import(`./tools/${id}.js`);
       mod.init(section);
     } catch (err) {
-      section.innerHTML = `<p class="error-text">도구를 불러오지 못했습니다: ${String(err)}</p>`;
+      section.innerHTML = `<p class="error-text">도구를 불러오지 못했습니다: ${escapeHtml(String(err))}</p>`;
       console.error(err);
     }
   }
@@ -179,6 +235,8 @@ async function route() {
   for (const link of $$('.nav-link')) link.classList.toggle('active', link.dataset.tool === id);
   const tool = toolIndex.get(id);
   document.title = tool ? `${tool.name} — DevTools Hub` : 'DevTools Hub — 개발자 유틸리티 모음';
+  $('#main').scrollTop = 0;
+  window.scrollTo(0, 0);
 }
 
 initTheme();

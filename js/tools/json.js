@@ -1,6 +1,85 @@
-// JSON 포매터/뷰어: Pretty / Minify / Validate + 오류 위치(줄/열) 표시
+// JSON 포매터/뷰어: Pretty / Minify / Validate + 오류 위치(줄/열) 표시 + 접을 수 있는 트리 뷰
 import { $ } from '../utils/dom.js';
 import { bindCopyButtons } from '../utils/clipboard.js';
+
+/* ----- 트리 뷰 ----- */
+const MAX_TREE_NODES = 5000;
+
+function leafSpan(value) {
+  const span = document.createElement('span');
+  if (typeof value === 'string') {
+    span.className = 'tree-str';
+    span.textContent = JSON.stringify(value);
+  } else if (typeof value === 'number') {
+    span.className = 'tree-num';
+    span.textContent = String(value);
+  } else if (typeof value === 'boolean') {
+    span.className = 'tree-bool';
+    span.textContent = String(value);
+  } else {
+    span.className = 'tree-null';
+    span.textContent = 'null';
+  }
+  return span;
+}
+
+function keyPrefix(key) {
+  const frag = document.createDocumentFragment();
+  if (key !== undefined) {
+    const k = document.createElement('span');
+    k.className = 'tree-key';
+    k.textContent = typeof key === 'number' ? String(key) : JSON.stringify(key);
+    frag.appendChild(k);
+    frag.appendChild(document.createTextNode(': '));
+  }
+  return frag;
+}
+
+function buildTreeNode(value, key, depth, state) {
+  state.count++;
+  if (state.count > MAX_TREE_NODES) return null;
+
+  const isObj = value !== null && typeof value === 'object';
+  if (!isObj) {
+    const leaf = document.createElement('div');
+    leaf.className = 'tree-leaf';
+    leaf.appendChild(keyPrefix(key));
+    leaf.appendChild(leafSpan(value));
+    return leaf;
+  }
+
+  const isArray = Array.isArray(value);
+  const entries = isArray ? value.map((v, i) => [i, v]) : Object.entries(value);
+  const details = document.createElement('details');
+  if (depth < 2) details.open = true; // 얕은 depth만 기본 펼침
+  const summary = document.createElement('summary');
+  summary.appendChild(keyPrefix(key));
+  const meta = document.createElement('span');
+  meta.className = 'tree-meta';
+  meta.textContent = isArray ? `[ ] ${entries.length}개 항목` : `{ } ${entries.length}개 키`;
+  summary.appendChild(meta);
+  details.appendChild(summary);
+
+  for (const [k, v] of entries) {
+    const child = buildTreeNode(v, k, depth + 1, state);
+    if (!child) break; // 노드 상한 도달
+    details.appendChild(child);
+  }
+  return details;
+}
+
+function renderTree(parsed, container) {
+  container.innerHTML = '';
+  const state = { count: 0 };
+  const root = buildTreeNode(parsed, undefined, 0, state);
+  if (root) container.appendChild(root);
+  if (state.count > MAX_TREE_NODES) {
+    const notice = document.createElement('p');
+    notice.className = 'hint';
+    notice.textContent = `⚠️ 노드가 많아 처음 ${MAX_TREE_NODES.toLocaleString('ko-KR')}개만 표시했습니다.`;
+    container.appendChild(notice);
+  }
+}
 
 function positionToLineCol(text, pos) {
   let line = 1;
@@ -116,6 +195,7 @@ export function init(container) {
         <button class="btn btn-primary" id="json-pretty">Pretty</button>
         <button class="btn" id="json-minify">Minify</button>
         <button class="btn" id="json-validate">Validate</button>
+        <button class="btn" id="json-tree-btn">트리 뷰</button>
         <label>들여쓰기
           <select id="json-indent">
             <option value="2" selected>2 spaces</option>
@@ -134,6 +214,13 @@ export function init(container) {
         <button class="btn btn-sm" data-copy-target="#json-output">복사</button>
       </div>
       <textarea id="json-output" class="code" rows="12" readonly spellcheck="false"></textarea>
+    </div>
+    <div class="card" id="json-tree-card" hidden>
+      <div class="row">
+        <h3 class="grow" style="margin-bottom:0">트리 뷰</h3>
+        <button class="btn btn-sm" id="json-tree-close">닫기</button>
+      </div>
+      <div class="json-tree" id="json-tree"></div>
     </div>
   `;
 
@@ -178,10 +265,20 @@ export function init(container) {
     status.innerHTML = '<p class="success-text">✓ 유효한 JSON입니다.</p>';
   });
 
+  const treeCard = $('#json-tree-card', container);
+  $('#json-tree-btn', container).addEventListener('click', () => {
+    const parsed = parseInput();
+    if (parsed === undefined) { treeCard.hidden = true; return; }
+    renderTree(parsed, $('#json-tree', container));
+    treeCard.hidden = false;
+  });
+  $('#json-tree-close', container).addEventListener('click', () => { treeCard.hidden = true; });
+
   $('#json-clear', container).addEventListener('click', () => {
     input.value = '';
     output.value = '';
     status.innerHTML = '';
+    treeCard.hidden = true;
     input.focus();
   });
 
