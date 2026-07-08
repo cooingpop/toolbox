@@ -298,6 +298,74 @@ code { font-family: var(--code-font); font-size: 0.92em; background: var(--bg-el
   border-radius: 999px;
 }
 
+/* 즐겨찾기 별 + 빠른 접근 칩 */
+.home-card { position: relative; }
+.fav-star {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: none;
+  background: transparent;
+  font-size: 17px;
+  line-height: 1;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-radius: 8px;
+}
+.fav-star:hover { background: var(--accent-soft); color: var(--warning); }
+.fav-star.on { color: #f5b301; }
+
+#home-quick { margin: 4px 0 8px; }
+.quick-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+.quick-label { font-size: 12.5px; font-weight: 700; color: var(--text-muted); margin-right: 2px; }
+.quick-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.quick-chip:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+
+/* 도구 헤더 공유 버튼 */
+.tool-header { position: relative; }
+.share-btn { margin-top: 4px; }
+
+/* 언어 토글 */
+#lang-toggle { font-size: 13px; font-weight: 700; min-width: 40px; }
+
+/* Markdown 미리보기 */
+.md-preview {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  min-height: 200px;
+  font-size: 14px;
+  line-height: 1.65;
+  overflow-x: auto;
+}
+.md-preview h1, .md-preview h2, .md-preview h3 { margin: 14px 0 8px; }
+.md-preview h1:first-child, .md-preview h2:first-child { margin-top: 0; }
+.md-preview blockquote {
+  margin: 10px 0;
+  padding: 6px 14px;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 0 6px 6px 0;
+}
+.md-preview ul, .md-preview ol { padding-left: 24px; margin: 8px 0; }
+.md-preview img { max-width: 100%; }
+.md-preview pre.code { margin: 10px 0; white-space: pre; }
+.md-preview table { margin: 10px 0; }
+.md-preview hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
 .home-about {
   margin-top: 36px;
   padding-top: 20px;

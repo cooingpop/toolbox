@@ -1,114 +1,141 @@
-// 앱 셸: 라우팅(해시 기반), 사이드바(검색 포함), 테마 토글, 홈 그리드
+// 앱 셸: 라우팅(해시 기반), 사이드바, 상단바 검색, 테마/언어 토글,
+//        즐겨찾기·최근 사용, URL 입력 공유, PWA 등록
 import { $, $$, escapeHtml } from './utils/dom.js';
+import { copyText } from './utils/clipboard.js';
+import { CATEGORIES, SHAREABLE } from './registry.js';
 
 const THEME_KEY = 'devtools-hub-theme';
-
-// ⚠️ 도구를 추가/수정하면 index.html의 정적 홈 그리드와 JSON-LD, llms.txt, sitemap도 함께 갱신할 것.
-//    (홈 그리드는 SEO를 위해 index.html에 정적으로 들어 있고, JS는 사이드바/라우팅만 담당한다)
-const CATEGORIES = [
-  {
-    name: '포맷 & 변환',
-    tools: [
-      { id: 'json', icon: '🧾', name: 'JSON 포매터', desc: 'Pretty / Minify / 검증 + 트리 뷰' },
-      { id: 'xml', icon: '📐', name: 'XML 포매터', desc: '들여쓰기 정리 + 유효성 검사' },
-      { id: 'yaml', icon: '🔁', name: 'JSON ↔ YAML 변환', desc: '양방향 변환 (자체 구현)' },
-      { id: 'sql', icon: '🗃️', name: 'SQL 포매터', desc: '키워드 개행/들여쓰기 정리' },
-    ],
-  },
-  {
-    name: '인코딩 & 디코딩',
-    tools: [
-      { id: 'base64', icon: '🔤', name: 'Base64 인코더/디코더', desc: '텍스트·이미지 ↔ Base64 (UTF-8 안전)' },
-      { id: 'url', icon: '🔗', name: 'URL 인코더/디코더', desc: '컴포넌트/전체 URI 모드' },
-      { id: 'jwt', icon: '🎫', name: 'JWT 디코더', desc: 'header/payload 디코딩 + HMAC 서명 검증' },
-      { id: 'entity', icon: '🏷️', name: 'HTML 엔티티', desc: '&lt; ↔ < 인코딩/디코딩' },
-      { id: 'hex', icon: '🔢', name: 'Hex ↔ 텍스트', desc: 'UTF-8 바이트 기준 16진수 변환' },
-      { id: 'unicode', icon: '✳️', name: 'Unicode 이스케이프', desc: '\\uXXXX ↔ 문자 변환' },
-    ],
-  },
-  {
-    name: '해시 & 생성',
-    tools: [
-      { id: 'hash', icon: '🔒', name: '해시 생성기', desc: 'SHA-1/256/384/512 동시 출력' },
-      { id: 'uuid', icon: '🆔', name: 'UUID 생성기', desc: 'UUID v4, 개수·대소문자 옵션' },
-      { id: 'password', icon: '🔑', name: '비밀번호 생성기', desc: '암호학적 난수, 길이·문자셋 옵션' },
-      { id: 'hmac', icon: '🛡️', name: 'HMAC 생성기', desc: 'HMAC-SHA256/384/512, hex·Base64' },
-      { id: 'md5', icon: '🧮', name: 'MD5 해시', desc: '순수 JS 구현 (체크섬·레거시용)' },
-    ],
-  },
-  {
-    name: '시간 & 날짜',
-    tools: [
-      { id: 'timestamp', icon: '⏱️', name: 'Unix 타임스탬프', desc: '초/밀리초 자동 감지, 타임존·상대시간' },
-      { id: 'cron', icon: '⏰', name: 'Cron 표현식 해석기', desc: '자연어 설명 + 다음 실행 시각' },
-      { id: 'timezone', icon: '🌍', name: '타임존 변환기', desc: '여러 도시 시각 동시 표시' },
-      { id: 'datediff', icon: '📅', name: '날짜 차이 계산기', desc: '두 날짜 사이 일/시/분 + 달력 기준' },
-    ],
-  },
-  {
-    name: '텍스트 & 정규식',
-    tools: [
-      { id: 'regex', icon: '🎯', name: '정규식 테스터', desc: '매치 하이라이트 + 캡처 그룹' },
-      { id: 'case', icon: '🔠', name: '케이스 변환기', desc: 'camel/snake/kebab/Pascal 등 동시 변환' },
-      { id: 'diff', icon: '🔀', name: '텍스트 Diff 비교', desc: '라인 단위 diff (LCS)' },
-      { id: 'textstats', icon: '📊', name: '텍스트 통계', desc: '글자·단어·줄·바이트 수' },
-      { id: 'lines', icon: '📑', name: '줄 정렬/중복 제거', desc: 'sort / unique / reverse' },
-      { id: 'lorem', icon: '📝', name: 'Lorem Ipsum 생성기', desc: '문단·문장·단어 단위 채움 텍스트' },
-    ],
-  },
-  {
-    name: '색상 & 디자인',
-    tools: [
-      { id: 'color', icon: '🎨', name: '색상 변환기', desc: 'HEX ↔ RGB(A) ↔ HSL(A) + OKLCH' },
-      { id: 'contrast', icon: '🌓', name: '대비 검사기 (WCAG)', desc: '대비비율 + AA/AAA 통과 여부' },
-      { id: 'gradient', icon: '🌈', name: '그라디언트 생성기', desc: 'CSS gradient 코드 + 프리뷰' },
-      { id: 'bezier', icon: '〰️', name: 'Cubic-bezier 에디터', desc: '드래그 곡선 + CSS 타이밍 함수' },
-      { id: 'boxshadow', icon: '🔲', name: 'box-shadow 생성기', desc: '다중 레이어 그림자 + 프리뷰' },
-    ],
-  },
-  {
-    name: '기타',
-    tools: [
-      { id: 'radix', icon: '🔟', name: '진법 변환기', desc: '2/8/10/16진수 상호 변환 (BigInt)' },
-      { id: 'qrcode', icon: '🔳', name: 'QR 코드 생성기', desc: '텍스트·URL → QR (PNG 다운로드)' },
-      { id: 'imageresize', icon: '🖼️', name: '이미지 리사이즈/압축', desc: 'Canvas 기반, JPEG/WebP/PNG' },
-    ],
-  },
-];
+const LANG_KEY = 'devtools-hub-lang';
+const FAVS_KEY = 'devtools-hub-favs';
+const RECENT_KEY = 'devtools-hub-recent';
 
 const toolIndex = new Map();
 for (const cat of CATEGORIES) {
-  for (const tool of cat.tools) toolIndex.set(tool.id, { ...tool, category: cat.name });
+  for (const tool of cat.tools) toolIndex.set(tool.id, { ...tool, category: cat.name, categoryEn: cat.en });
 }
 
 const initialized = new Set();
+let lang = 'ko';
+try { lang = localStorage.getItem(LANG_KEY) || 'ko'; } catch { /* */ }
+
+const tName = (t) => (lang === 'en' ? t.nameEn : t.name);
+const tDesc = (t) => (lang === 'en' ? t.descEn : t.desc);
+const tCat = (t) => (lang === 'en' ? t.categoryEn : t.category);
+
+const store = {
+  get(key, fallback) {
+    try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+  },
+  set(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* */ }
+  },
+};
 
 /* ----- 테마 ----- */
 function initTheme() {
   const button = $('#theme-toggle');
-  // 라벨은 "지금 누르면 어떤 모드로 바뀌는지"를 안내
   const updateLabel = () => {
-    const label = document.documentElement.dataset.theme === 'dark' ? '라이트모드로 전환' : '다크모드로 전환';
+    const dark = document.documentElement.dataset.theme === 'dark';
+    const label = lang === 'en'
+      ? (dark ? 'Switch to light mode' : 'Switch to dark mode')
+      : (dark ? '라이트모드로 전환' : '다크모드로 전환');
     button.setAttribute('aria-label', label);
     button.title = label;
   };
   button.addEventListener('click', () => {
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
-    try { localStorage.setItem(THEME_KEY, next); } catch { /* 프라이빗 모드 등 */ }
+    try { localStorage.setItem(THEME_KEY, next); } catch { /* */ }
     updateLabel();
   });
   updateLabel();
+  return updateLabel;
 }
 
-/* ----- 사이드바 (카테고리 그룹) ----- */
+/* ----- 언어 토글 (셸 수준: 사이드바·홈·검색. 도구 내부 UI는 한국어) ----- */
+const I18N = {
+  ko: {
+    searchPlaceholder: '도구 검색  ( / )',
+    homeTitle: 'DevTools Hub — 무료 온라인 개발자 도구 모음',
+    homeDesc: '개발자·디자이너·프론트엔드가 매일 쓰는 유틸리티 모음. 모든 처리는 브라우저 안에서만 이루어지며 어떤 데이터도 서버로 전송되지 않습니다. 설치·회원가입 없이 무료로 사용하세요.',
+    favorites: '⭐ 즐겨찾기',
+    recent: '🕘 최근 사용',
+    docTitle: 'DevTools Hub — 무료 온라인 개발자 도구 모음 | JSON 포매터, JWT 디코더, Cron 해석기',
+    share: '🔗 입력 공유 링크',
+    shared: '공유 링크가 복사되었습니다',
+    langButton: 'EN',
+    langLabel: 'Switch to English',
+  },
+  en: {
+    searchPlaceholder: 'Search tools  ( / )',
+    homeTitle: 'DevTools Hub — Free Online Developer Utilities',
+    homeDesc: 'Everyday utilities for developers and designers. Everything runs 100% in your browser — no data ever leaves your device. Free, no signup, no install. (Tool UIs are in Korean for now.)',
+    favorites: '⭐ Favorites',
+    recent: '🕘 Recent',
+    docTitle: 'DevTools Hub — Free Online Developer Utilities',
+    share: '🔗 Share input link',
+    shared: 'Share link copied',
+    langButton: '한',
+    langLabel: '한국어로 전환',
+  },
+};
+const t = (key) => I18N[lang][key];
+
+function applyLanguage() {
+  // 사이드바
+  for (const group of $$('.nav-group')) {
+    const catName = group.dataset.category;
+    const cat = CATEGORIES.find((c) => c.name === catName);
+    if (cat) group.querySelector('.nav-category').textContent = lang === 'en' ? cat.en : cat.name;
+  }
+  for (const link of $$('.nav-link')) {
+    const tool = toolIndex.get(link.dataset.tool);
+    if (tool) link.querySelector('.nav-name').textContent = tName(tool);
+  }
+  // 홈 (정적 카드 텍스트 교체)
+  $('#view-home h1').textContent = t('homeTitle');
+  $('#view-home .tool-header .tool-desc').textContent = t('homeDesc');
+  for (const card of $$('#home-grid .home-card')) {
+    const tool = toolIndex.get(card.getAttribute('href').slice(1));
+    if (!tool) continue;
+    card.querySelector('.card-title').textContent = tName(tool);
+    card.querySelector('.card-desc').textContent = tDesc(tool);
+    card.querySelector('.card-cat').textContent = tCat(tool);
+  }
+  const about = $('.home-about');
+  if (about) about.hidden = lang === 'en'; // 소개 문단은 한국어 원문 (EN 모드에서는 숨김)
+  // 검색
+  $('#tool-search').placeholder = t('searchPlaceholder');
+  // 언어 버튼
+  const langBtn = $('#lang-toggle');
+  langBtn.textContent = t('langButton');
+  langBtn.title = t('langLabel');
+  langBtn.setAttribute('aria-label', t('langLabel'));
+  document.documentElement.lang = lang;
+  renderQuickSection();
+}
+
+function initLang(updateThemeLabel) {
+  $('#lang-toggle').addEventListener('click', () => {
+    lang = lang === 'ko' ? 'en' : 'ko';
+    store.set(LANG_KEY, lang);
+    try { localStorage.setItem(LANG_KEY, lang); } catch { /* */ }
+    applyLanguage();
+    updateThemeLabel();
+    updateTitle();
+  });
+}
+
+/* ----- 사이드바 ----- */
 function renderSidebar() {
   const sidebar = $('#sidebar');
   const frag = document.createDocumentFragment();
   for (const cat of CATEGORIES) {
     const group = document.createElement('div');
     group.className = 'nav-group';
-    group.innerHTML = `<div class="nav-category">${escapeHtml(cat.name)}</div>`;
+    group.dataset.category = cat.name;
+    group.innerHTML = '<div class="nav-category"></div>';
+    group.querySelector('.nav-category').textContent = cat.name;
     for (const tool of cat.tools) {
       const link = document.createElement('a');
       link.className = 'nav-link';
@@ -137,39 +164,35 @@ function initSearch() {
     items = [];
     active = -1;
   };
-
   const highlight = () => {
-    panel.querySelectorAll('.search-item').forEach((el, i) => {
-      el.classList.toggle('active', i === active);
-    });
+    panel.querySelectorAll('.search-item').forEach((el, i) => el.classList.toggle('active', i === active));
   };
-
   const render = () => {
     const q = input.value.trim().toLowerCase();
     if (!q) { close(); return; }
-    items = allTools.filter((t) => `${t.name} ${t.desc} ${t.id} ${t.category}`.toLowerCase().includes(q)).slice(0, 8);
+    items = allTools.filter((tool) =>
+      `${tool.name} ${tool.desc} ${tool.nameEn} ${tool.descEn} ${tool.id} ${tool.category} ${tool.categoryEn}`.toLowerCase().includes(q)).slice(0, 8);
     if (!items.length) {
-      panel.innerHTML = '<div class="search-empty">검색 결과가 없습니다</div>';
+      panel.innerHTML = `<div class="search-empty">${lang === 'en' ? 'No results' : '검색 결과가 없습니다'}</div>`;
       panel.hidden = false;
       input.setAttribute('aria-expanded', 'true');
       active = -1;
       return;
     }
-    panel.innerHTML = items.map((t, i) => `
-      <a href="#${t.id}" class="search-item" role="option" data-index="${i}">
-        <span class="nav-icon" aria-hidden="true">${t.icon}</span>
+    panel.innerHTML = items.map((tool, i) => `
+      <a href="#${tool.id}" class="search-item" role="option" data-index="${i}">
+        <span class="nav-icon" aria-hidden="true">${tool.icon}</span>
         <span class="si-body"><span class="si-name"></span><span class="si-cat"></span></span>
       </a>`).join('');
     panel.querySelectorAll('.search-item').forEach((el, i) => {
-      el.querySelector('.si-name').textContent = items[i].name;
-      el.querySelector('.si-cat').textContent = items[i].category;
+      el.querySelector('.si-name').textContent = tName(items[i]);
+      el.querySelector('.si-cat').textContent = tCat(items[i]);
     });
     active = 0;
     highlight();
     panel.hidden = false;
     input.setAttribute('aria-expanded', 'true');
   };
-
   const go = (index) => {
     if (index < 0 || !items[index]) return;
     location.hash = `#${items[index].id}`;
@@ -181,21 +204,14 @@ function initSearch() {
   input.addEventListener('input', render);
   input.addEventListener('focus', render);
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      input.value = '';
-      close();
-      input.blur();
-    } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    if (e.key === 'Escape') { input.value = ''; close(); input.blur(); }
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       if (!items.length) return;
       e.preventDefault();
       active = (active + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
       highlight();
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      go(active);
-    }
+    } else if (e.key === 'Enter') { e.preventDefault(); go(active); }
   });
-  // 클릭 네비게이션 (blur보다 먼저 처리되도록 mousedown 사용)
   panel.addEventListener('mousedown', (e) => {
     const item = e.target.closest('.search-item');
     if (!item) return;
@@ -203,8 +219,6 @@ function initSearch() {
     go(Number(item.dataset.index));
   });
   input.addEventListener('blur', () => setTimeout(close, 150));
-
-  // "/" 또는 Ctrl/Cmd+K로 검색 포커스 (상단바라 모바일에서도 항상 보임)
   document.addEventListener('keydown', (e) => {
     const editing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName ?? '');
     if ((e.key === '/' && !editing) || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) {
@@ -231,13 +245,142 @@ function initMobileNav() {
   });
 }
 
+/* ----- 즐겨찾기 + 최근 사용 ----- */
+function getFavs() { return store.get(FAVS_KEY, []).filter((id) => toolIndex.has(id)); }
+
+function toggleFav(id) {
+  const favs = getFavs();
+  const idx = favs.indexOf(id);
+  if (idx >= 0) favs.splice(idx, 1); else favs.push(id);
+  store.set(FAVS_KEY, favs);
+  updateStars();
+  renderQuickSection();
+}
+
+function trackRecent(id) {
+  const recent = store.get(RECENT_KEY, []).filter((r) => r !== id && toolIndex.has(r));
+  recent.unshift(id);
+  store.set(RECENT_KEY, recent.slice(0, 6));
+  renderQuickSection();
+}
+
+function updateStars() {
+  const favs = new Set(getFavs());
+  for (const btn of $$('#home-grid .fav-star')) {
+    const id = btn.dataset.fav;
+    btn.classList.toggle('on', favs.has(id));
+    btn.textContent = favs.has(id) ? '★' : '☆';
+    btn.title = favs.has(id) ? (lang === 'en' ? 'Remove from favorites' : '즐겨찾기 해제') : (lang === 'en' ? 'Add to favorites' : '즐겨찾기 추가');
+  }
+}
+
+function chipHtml(id) {
+  const tool = toolIndex.get(id);
+  return `<a class="quick-chip" href="#${id}"><span aria-hidden="true">${tool.icon}</span><span class="qc-name"></span></a>`;
+}
+
+function renderQuickSection() {
+  const box = $('#home-quick');
+  if (!box) return;
+  const favs = getFavs();
+  const recent = store.get(RECENT_KEY, []).filter((id) => toolIndex.has(id));
+  if (!favs.length && !recent.length) { box.innerHTML = ''; return; }
+  let html = '';
+  if (favs.length) html += `<div class="quick-row"><span class="quick-label">${t('favorites')}</span>${favs.map(chipHtml).join('')}</div>`;
+  if (recent.length) html += `<div class="quick-row"><span class="quick-label">${t('recent')}</span>${recent.map(chipHtml).join('')}</div>`;
+  box.innerHTML = html;
+  // 이름은 textContent로 안전하게
+  const ids = [...favs, ...recent];
+  box.querySelectorAll('.qc-name').forEach((el, i) => { el.textContent = tName(toolIndex.get(ids[i])); });
+}
+
+function initFavorites() {
+  // 정적 홈 카드에 별 버튼 주입
+  for (const card of $$('#home-grid .home-card')) {
+    const id = card.getAttribute('href').slice(1);
+    if (!toolIndex.has(id)) continue;
+    const star = document.createElement('button');
+    star.className = 'fav-star';
+    star.dataset.fav = id;
+    star.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleFav(id);
+    });
+    card.appendChild(star);
+  }
+  updateStars();
+  renderQuickSection();
+}
+
+/* ----- URL 입력 공유 ----- */
+function encodeShare(text) {
+  const bytes = new TextEncoder().encode(text);
+  let bin = '';
+  for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
+}
+
+function decodeShare(b64url) {
+  let b64 = b64url.replaceAll('-', '+').replaceAll('_', '/');
+  while (b64.length % 4 !== 0) b64 += '=';
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+
+function injectShareButton(id, section) {
+  if (!SHAREABLE[id]) return;
+  const header = section.querySelector('.tool-header');
+  if (!header || header.querySelector('.share-btn')) return;
+  const btn = document.createElement('button');
+  btn.className = 'btn btn-sm share-btn';
+  btn.textContent = t('share');
+  btn.addEventListener('click', () => {
+    const input = section.querySelector(SHAREABLE[id]);
+    const value = input ? input.value : '';
+    const url = `${location.origin}${location.pathname}#${id}${value ? `?i=${encodeShare(value)}` : ''}`;
+    if (url.length > 8000) {
+      copyText('', btn);
+      return;
+    }
+    copyText(url, btn);
+  });
+  header.appendChild(btn);
+}
+
+function applySharedInput(id, section, payload) {
+  if (!payload || !SHAREABLE[id]) return;
+  try {
+    const params = new URLSearchParams(payload);
+    const encoded = params.get('i');
+    if (!encoded) return;
+    const input = section.querySelector(SHAREABLE[id]);
+    if (!input) return;
+    input.value = decodeShare(encoded);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  } catch { /* 잘못된 공유 페이로드는 무시 */ }
+}
+
 /* ----- 라우팅 ----- */
+function parseHash() {
+  const raw = location.hash.slice(1);
+  const qIdx = raw.indexOf('?');
+  return qIdx < 0 ? { id: raw || 'home', payload: '' } : { id: raw.slice(0, qIdx), payload: raw.slice(qIdx + 1) };
+}
+
+function updateTitle() {
+  const { id } = parseHash();
+  const tool = toolIndex.get(id);
+  document.title = tool ? `${tName(tool)} — DevTools Hub` : t('docTitle');
+}
+
 async function route() {
-  const id = location.hash.slice(1) || 'home';
+  const { id, payload } = parseHash();
   const isTool = toolIndex.has(id);
   const viewId = isTool ? `view-${id}` : 'view-home';
 
-  // 도구 섹션이 없으면 생성 + 모듈 지연 로드
   if (isTool && !initialized.has(id)) {
     initialized.add(id);
     const section = document.createElement('section');
@@ -248,25 +391,37 @@ async function route() {
     try {
       const mod = await import(`./tools/${id}.js`);
       mod.init(section);
+      injectShareButton(id, section);
     } catch (err) {
       section.innerHTML = `<p class="error-text">도구를 불러오지 못했습니다: ${escapeHtml(String(err))}</p>`;
       console.error(err);
     }
   }
+  if (isTool && payload) {
+    applySharedInput(id, $(`#view-${id}`), payload);
+  }
+  if (isTool) trackRecent(id);
 
   for (const view of $$('.view')) view.hidden = view.id !== viewId;
   for (const link of $$('.nav-link')) link.classList.toggle('active', link.dataset.tool === id);
-  const tool = toolIndex.get(id);
-  document.title = tool
-    ? `${tool.name} — DevTools Hub`
-    : 'DevTools Hub — 무료 온라인 개발자 도구 모음 | JSON 포매터, JWT 디코더, Cron 해석기';
-  $('#main').scrollTop = 0;
+  updateTitle();
   window.scrollTo(0, 0);
 }
 
-initTheme();
+/* ----- PWA ----- */
+function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  if (location.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(location.hostname)) return;
+  navigator.serviceWorker.register('./sw.js').catch(() => { /* 등록 실패해도 사이트는 정상 동작 */ });
+}
+
+const updateThemeLabel = initTheme();
 renderSidebar();
 initSearch();
 initMobileNav();
+initFavorites();
+initLang(updateThemeLabel);
+applyLanguage();
 window.addEventListener('hashchange', route);
 route();
+registerServiceWorker();

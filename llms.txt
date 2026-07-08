@@ -1,19 +1,22 @@
 # DevTools Hub
 
-> 개발자·디자이너·프론트엔드용 무료 온라인 유틸리티 33종. 모든 처리는 브라우저 안에서만 이루어지며 어떤 데이터도 서버로 전송되지 않습니다 (JWT·해시·파일 입력 포함). Vanilla JS + 브라우저 네이티브 API, 빌드 스텝·회원가입·설치 없음.
+> 개발자·디자이너·프론트엔드용 무료 온라인 유틸리티 41종. 모든 처리는 브라우저 안에서만 이루어지며 어떤 데이터도 서버로 전송되지 않습니다 (JWT·해시·파일 입력 포함). Vanilla JS + 브라우저 네이티브 API, 빌드 스텝·회원가입·설치 없음. PWA로 설치해 오프라인 사용 가능.
 >
-> Free online developer utilities (JSON formatter, JWT decoder, Base64, cron parser, regex tester, color converter and 27 more). 100% client-side — no data ever leaves the browser. No signup, no install.
+> Free online developer utilities (JSON formatter, JWT decoder, Base64, cron parser, regex tester, color converter, cURL-to-code, JSON diff and more). 100% client-side — no data ever leaves the browser. No signup, no install.
 
 URL: https://cooingpop.github.io/toolbox/
 
-## 포맷 & 변환
+## 포맷 & 변환 (Format & Convert)
 
 - [JSON 포매터](https://cooingpop.github.io/toolbox/#json): Pretty / Minify / 검증 + 트리 뷰
 - [XML 포매터](https://cooingpop.github.io/toolbox/#xml): 들여쓰기 정리 + 유효성 검사
 - [JSON ↔ YAML 변환](https://cooingpop.github.io/toolbox/#yaml): 양방향 변환 (자체 구현)
 - [SQL 포매터](https://cooingpop.github.io/toolbox/#sql): 키워드 개행/들여쓰기 정리
+- [JSON ↔ CSV 변환](https://cooingpop.github.io/toolbox/#jsoncsv): 객체 배열 ↔ CSV/TSV (따옴표 안전)
+- [JSON Diff](https://cooingpop.github.io/toolbox/#jsondiff): 구조 기준 비교 (키 순서 무시)
+- [cURL → 코드 변환](https://cooingpop.github.io/toolbox/#curl): curl 명령 → fetch / axios 코드
 
-## 인코딩 & 디코딩
+## 인코딩 & 디코딩 (Encode & Decode)
 
 - [Base64 인코더/디코더](https://cooingpop.github.io/toolbox/#base64): 텍스트·이미지 ↔ Base64 (UTF-8 안전)
 - [URL 인코더/디코더](https://cooingpop.github.io/toolbox/#url): 컴포넌트/전체 URI 모드
@@ -22,7 +25,7 @@ URL: https://cooingpop.github.io/toolbox/
 - [Hex ↔ 텍스트](https://cooingpop.github.io/toolbox/#hex): UTF-8 바이트 기준 16진수 변환
 - [Unicode 이스케이프](https://cooingpop.github.io/toolbox/#unicode): \uXXXX ↔ 문자 변환
 
-## 해시 & 생성
+## 해시 & 생성 (Hash & Generate)
 
 - [해시 생성기](https://cooingpop.github.io/toolbox/#hash): SHA-1/256/384/512 동시 출력
 - [UUID 생성기](https://cooingpop.github.io/toolbox/#uuid): UUID v4, 개수·대소문자 옵션
@@ -30,14 +33,14 @@ URL: https://cooingpop.github.io/toolbox/
 - [HMAC 생성기](https://cooingpop.github.io/toolbox/#hmac): HMAC-SHA256/384/512, hex·Base64
 - [MD5 해시](https://cooingpop.github.io/toolbox/#md5): 순수 JS 구현 (체크섬·레거시용)
 
-## 시간 & 날짜
+## 시간 & 날짜 (Time & Date)
 
 - [Unix 타임스탬프](https://cooingpop.github.io/toolbox/#timestamp): 초/밀리초 자동 감지, 타임존·상대시간
 - [Cron 표현식 해석기](https://cooingpop.github.io/toolbox/#cron): 자연어 설명 + 다음 실행 시각
 - [타임존 변환기](https://cooingpop.github.io/toolbox/#timezone): 여러 도시 시각 동시 표시
 - [날짜 차이 계산기](https://cooingpop.github.io/toolbox/#datediff): 두 날짜 사이 일/시/분 + 달력 기준
 
-## 텍스트 & 정규식
+## 텍스트 & 정규식 (Text & Regex)
 
 - [정규식 테스터](https://cooingpop.github.io/toolbox/#regex): 매치 하이라이트 + 캡처 그룹
 - [케이스 변환기](https://cooingpop.github.io/toolbox/#case): camel/snake/kebab/Pascal 등 동시 변환
@@ -45,20 +48,25 @@ URL: https://cooingpop.github.io/toolbox/
 - [텍스트 통계](https://cooingpop.github.io/toolbox/#textstats): 글자·단어·줄·바이트 수
 - [줄 정렬/중복 제거](https://cooingpop.github.io/toolbox/#lines): sort / unique / reverse
 - [Lorem Ipsum 생성기](https://cooingpop.github.io/toolbox/#lorem): 문단·문장·단어 단위 채움 텍스트
+- [Markdown 미리보기](https://cooingpop.github.io/toolbox/#markdown): 실시간 렌더 + HTML 출력
+- [Slug 생성기](https://cooingpop.github.io/toolbox/#slug): 제목 → URL slug (한글 로마자 변환)
 
-## 색상 & 디자인
+## 색상 & 디자인 (Color & Design)
 
 - [색상 변환기](https://cooingpop.github.io/toolbox/#color): HEX ↔ RGB(A) ↔ HSL(A) + OKLCH
 - [대비 검사기 (WCAG)](https://cooingpop.github.io/toolbox/#contrast): 대비비율 + AA/AAA 통과 여부
 - [그라디언트 생성기](https://cooingpop.github.io/toolbox/#gradient): CSS gradient 코드 + 프리뷰
 - [Cubic-bezier 에디터](https://cooingpop.github.io/toolbox/#bezier): 드래그 곡선 + CSS 타이밍 함수
 - [box-shadow 생성기](https://cooingpop.github.io/toolbox/#boxshadow): 다중 레이어 그림자 + 프리뷰
+- [파비콘 생성기](https://cooingpop.github.io/toolbox/#favicon): 이미지 → 16~512px PNG + ICO
 
-## 기타
+## 기타 (Misc)
 
 - [진법 변환기](https://cooingpop.github.io/toolbox/#radix): 2/8/10/16진수 상호 변환 (BigInt)
 - [QR 코드 생성기](https://cooingpop.github.io/toolbox/#qrcode): 텍스트·URL → QR (PNG 다운로드)
 - [이미지 리사이즈/압축](https://cooingpop.github.io/toolbox/#imageresize): Canvas 기반, JPEG/WebP/PNG
+- [HTTP 레퍼런스](https://cooingpop.github.io/toolbox/#httpref): 상태 코드 + MIME 타입 사전
+- [Chmod 계산기](https://cooingpop.github.io/toolbox/#chmod): 755 ↔ rwxr-xr-x 상호 변환
 
 ## 프라이버시
 
