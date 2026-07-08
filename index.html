@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevTools Hub — 개발자 유틸리티 모음</title>
+  <meta name="description" content="JSON 포매터, Base64, JWT 디코더, 해시, UUID, 타임스탬프, Cron, 정규식, 색상 변환 등 개발자 유틸리티 모음. 모든 처리는 브라우저 안에서만 이루어집니다.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧰</text></svg>">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script>
+    // FOUC 방지: CSS 로드 전에 테마 결정
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem('devtools-hub-theme'); } catch (e) {}
+      var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <button id="nav-toggle" class="icon-btn" aria-label="메뉴 열기" aria-expanded="false">
+      <span class="hamburger" aria-hidden="true"></span>
+    </button>
+    <a href="#home" class="brand">🧰 <span>DevTools Hub</span></a>
+    <div class="topbar-spacer"></div>
+    <button id="theme-toggle" class="icon-btn" aria-label="다크모드 전환" title="다크모드 전환">
+      <span class="theme-icon" aria-hidden="true"></span>
+    </button>
+  </header>
+
+  <div class="layout">
+    <nav id="sidebar" class="sidebar" aria-label="도구 목록">
+      <!-- app.js가 카테고리/도구 링크를 렌더링 -->
+    </nav>
+    <div id="sidebar-backdrop" class="sidebar-backdrop" hidden></div>
+    <main id="main" class="main">
+      <section id="view-home" class="view" hidden>
+        <div class="tool-header">
+          <h1>DevTools Hub</h1>
+          <p class="tool-desc">
+            개발자·디자이너·프론트엔드가 매일 쓰는 유틸리티 모음.
+            모든 처리는 <strong>브라우저 안에서만</strong> 이루어지며 어떤 데이터도 서버로 전송되지 않습니다.
+          </p>
+        </div>
+        <div id="home-grid" class="home-grid"></div>
+      </section>
+      <!-- 도구별 섹션은 app.js가 생성 -->
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
