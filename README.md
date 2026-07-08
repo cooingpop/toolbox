@@ -90,13 +90,19 @@ npx serve .
 ## 구조
 
 ```
-index.html          # 셸: 사이드바 네비 + 도구 컨테이너
+index.html          # 셸 + SEO (메타/OG/JSON-LD + 정적 홈 그리드 — 크롤러도 도구 목록을 읽음)
 css/styles.css      # 디자인 토큰 + 공통 + 도구별 스타일
-js/app.js           # 해시 라우팅, 테마 토글, 사이드바
+js/app.js           # 해시 라우팅, 테마 토글, 사이드바(검색)
 js/tools/*.js       # 도구별 모듈 (export function init(container))
 js/utils/           # DOM 헬퍼, 클립보드+토스트
 vendor/             # 단일 파일 라이브러리 — qrcode.mjs (MIT) 1개
+assets/og-image.png # OG/트위터 카드 이미지 (1200×630)
+robots.txt          # 검색·AI 크롤러(GPTBot, ClaudeBot 등) 허용 + sitemap 참조
+sitemap.xml         # 사이트맵
+llms.txt            # AI 에이전트용 사이트 요약 (도구 목록 + 프라이버시)
 ```
+
+> ⚠️ 도구를 추가하면 `js/app.js`의 CATEGORIES와 함께 `index.html`의 정적 홈 그리드·JSON-LD, `llms.txt`도 갱신해야 합니다 (SEO용 정적 사본).
 
 ## 라이선스
 

@@ -1,0 +1,39 @@
+# DevTools Hub — 모든 크롤러 환영 (AI 검색/답변 엔진 포함)
+User-agent: *
+Allow: /
+
+# AI 크롤러 명시 허용
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Gemini-Deep-Research
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://cooingpop.github.io/toolbox/sitemap.xml

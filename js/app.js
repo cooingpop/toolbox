@@ -3,6 +3,8 @@ import { $, $$, escapeHtml } from './utils/dom.js';
 
 const THEME_KEY = 'devtools-hub-theme';
 
+// ⚠️ 도구를 추가/수정하면 index.html의 정적 홈 그리드와 JSON-LD, llms.txt, sitemap도 함께 갱신할 것.
+//    (홈 그리드는 SEO를 위해 index.html에 정적으로 들어 있고, JS는 사이드바/라우팅만 담당한다)
 const CATEGORIES = [
   {
     name: '포맷 & 변환',
@@ -185,29 +187,6 @@ function initMobileNav() {
   });
 }
 
-/* ----- 홈 그리드 ----- */
-function renderHome() {
-  const grid = $('#home-grid');
-  const frag = document.createDocumentFragment();
-  for (const [id, tool] of toolIndex) {
-    const card = document.createElement('a');
-    card.className = 'home-card';
-    card.href = `#${id}`;
-    card.innerHTML = `
-      <div class="card-head">
-        <span class="card-icon" aria-hidden="true">${tool.icon}</span>
-        <span class="card-title"></span>
-      </div>
-      <div class="card-desc"></div>
-      <div class="card-cat"></div>`;
-    card.querySelector('.card-title').textContent = tool.name;
-    card.querySelector('.card-desc').textContent = tool.desc;
-    card.querySelector('.card-cat').textContent = tool.category;
-    frag.appendChild(card);
-  }
-  grid.appendChild(frag);
-}
-
 /* ----- 라우팅 ----- */
 async function route() {
   const id = location.hash.slice(1) || 'home';
@@ -234,7 +213,9 @@ async function route() {
   for (const view of $$('.view')) view.hidden = view.id !== viewId;
   for (const link of $$('.nav-link')) link.classList.toggle('active', link.dataset.tool === id);
   const tool = toolIndex.get(id);
-  document.title = tool ? `${tool.name} — DevTools Hub` : 'DevTools Hub — 개발자 유틸리티 모음';
+  document.title = tool
+    ? `${tool.name} — DevTools Hub`
+    : 'DevTools Hub — 무료 온라인 개발자 도구 모음 | JSON 포매터, JWT 디코더, Cron 해석기';
   $('#main').scrollTop = 0;
   window.scrollTo(0, 0);
 }
@@ -242,6 +223,5 @@ async function route() {
 initTheme();
 renderSidebar();
 initMobileNav();
-renderHome();
 window.addEventListener('hashchange', route);
 route();

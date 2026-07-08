@@ -3,10 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevTools Hub — 개발자 유틸리티 모음</title>
-  <meta name="description" content="JSON 포매터, Base64, JWT 디코더, 해시, UUID, 타임스탬프, Cron, 정규식, 색상 변환 등 개발자 유틸리티 모음. 모든 처리는 브라우저 안에서만 이루어집니다.">
+  <title>DevTools Hub — 무료 온라인 개발자 도구 모음 | JSON 포매터, JWT 디코더, Cron 해석기</title>
+  <meta name="description" content="JSON 포매터, JWT 디코더, Base64 변환, Cron 표현식 해석, 정규식 테스터, 색상 변환, QR 코드 생성 등 33가지 개발자 유틸리티를 브라우저에서 바로 사용하세요. 설치·회원가입 없이 무료, 모든 처리는 브라우저 안에서만 이루어져 데이터가 서버로 전송되지 않습니다.">
+  <meta name="keywords" content="개발자 도구, 온라인 도구, JSON 포매터, JSON formatter, JWT 디코더, JWT decoder, Base64 인코더, cron 표현식, cron parser, 정규식 테스터, regex tester, UUID 생성기, 해시 생성기, SHA256, 타임스탬프 변환, unix timestamp, 색상 변환, hex to rgb, URL 인코딩, QR 코드 생성, developer tools, devtools">
+  <meta name="author" content="cooingpop">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cooingpop.github.io/toolbox/">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="DevTools Hub">
+  <meta property="og:title" content="DevTools Hub — 무료 온라인 개발자 도구 모음 (33가지 유틸리티)">
+  <meta property="og:description" content="JSON 포매터, JWT 디코더, Base64, Cron 해석기, 정규식 테스터, 색상 변환 등 33가지 개발자 도구. 설치·회원가입 없이 무료, 모든 처리는 브라우저 안에서만.">
+  <meta property="og:url" content="https://cooingpop.github.io/toolbox/">
+  <meta property="og:image" content="https://cooingpop.github.io/toolbox/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="DevTools Hub — Free Online Developer Utilities">
+  <meta property="og:locale" content="ko_KR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DevTools Hub — 무료 온라인 개발자 도구 모음">
+  <meta name="twitter:description" content="JSON 포매터, JWT 디코더, Cron 해석기 등 33가지 개발자 도구. 100% 브라우저 처리, 데이터 전송 없음.">
+  <meta name="twitter:image" content="https://cooingpop.github.io/toolbox/assets/og-image.png">
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧰</text></svg>">
   <link rel="stylesheet" href="./css/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","@id":"https://cooingpop.github.io/toolbox/#app","name":"DevTools Hub","url":"https://cooingpop.github.io/toolbox/","description":"JSON 포매터, JWT 디코더, Base64 변환, Cron 표현식 해석, 정규식 테스터, 색상 변환 등 33가지 개발자 유틸리티를 브라우저에서 바로 사용하는 무료 온라인 도구 모음. 모든 처리는 브라우저 안에서만 이루어지며 데이터가 서버로 전송되지 않습니다.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"ko","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["JSON 포매터 — Pretty / Minify / 검증 + 트리 뷰","XML 포매터 — 들여쓰기 정리 + 유효성 검사","JSON ↔ YAML 변환 — 양방향 변환 (자체 구현)","SQL 포매터 — 키워드 개행/들여쓰기 정리","Base64 인코더/디코더 — 텍스트·이미지 ↔ Base64 (UTF-8 안전)","URL 인코더/디코더 — 컴포넌트/전체 URI 모드","JWT 디코더 — header/payload 디코딩 + HMAC 서명 검증","HTML 엔티티 — &lt; ↔ < 인코딩/디코딩","Hex ↔ 텍스트 — UTF-8 바이트 기준 16진수 변환","Unicode 이스케이프 — \\uXXXX ↔ 문자 변환","해시 생성기 — SHA-1/256/384/512 동시 출력","UUID 생성기 — UUID v4, 개수·대소문자 옵션","비밀번호 생성기 — 암호학적 난수, 길이·문자셋 옵션","HMAC 생성기 — HMAC-SHA256/384/512, hex·Base64","MD5 해시 — 순수 JS 구현 (체크섬·레거시용)","Unix 타임스탬프 — 초/밀리초 자동 감지, 타임존·상대시간","Cron 표현식 해석기 — 자연어 설명 + 다음 실행 시각","타임존 변환기 — 여러 도시 시각 동시 표시","날짜 차이 계산기 — 두 날짜 사이 일/시/분 + 달력 기준","정규식 테스터 — 매치 하이라이트 + 캡처 그룹","케이스 변환기 — camel/snake/kebab/Pascal 등 동시 변환","텍스트 Diff 비교 — 라인 단위 diff (LCS)","텍스트 통계 — 글자·단어·줄·바이트 수","줄 정렬/중복 제거 — sort / unique / reverse","Lorem Ipsum 생성기 — 문단·문장·단어 단위 채움 텍스트","색상 변환기 — HEX ↔ RGB(A) ↔ HSL(A) + OKLCH","대비 검사기 (WCAG) — 대비비율 + AA/AAA 통과 여부","그라디언트 생성기 — CSS gradient 코드 + 프리뷰","Cubic-bezier 에디터 — 드래그 곡선 + CSS 타이밍 함수","box-shadow 생성기 — 다중 레이어 그림자 + 프리뷰","진법 변환기 — 2/8/10/16진수 상호 변환 (BigInt)","QR 코드 생성기 — 텍스트·URL → QR (PNG 다운로드)","이미지 리사이즈/압축 — Canvas 기반, JPEG/WebP/PNG"],"image":"https://cooingpop.github.io/toolbox/assets/og-image.png"},{"@type":"ItemList","name":"DevTools Hub 도구 목록","numberOfItems":33,"itemListElement":[{"@type":"ListItem","position":1,"name":"JSON 포매터","url":"https://cooingpop.github.io/toolbox/#json"},{"@type":"ListItem","position":2,"name":"XML 포매터","url":"https://cooingpop.github.io/toolbox/#xml"},{"@type":"ListItem","position":3,"name":"JSON ↔ YAML 변환","url":"https://cooingpop.github.io/toolbox/#yaml"},{"@type":"ListItem","position":4,"name":"SQL 포매터","url":"https://cooingpop.github.io/toolbox/#sql"},{"@type":"ListItem","position":5,"name":"Base64 인코더/디코더","url":"https://cooingpop.github.io/toolbox/#base64"},{"@type":"ListItem","position":6,"name":"URL 인코더/디코더","url":"https://cooingpop.github.io/toolbox/#url"},{"@type":"ListItem","position":7,"name":"JWT 디코더","url":"https://cooingpop.github.io/toolbox/#jwt"},{"@type":"ListItem","position":8,"name":"HTML 엔티티","url":"https://cooingpop.github.io/toolbox/#entity"},{"@type":"ListItem","position":9,"name":"Hex ↔ 텍스트","url":"https://cooingpop.github.io/toolbox/#hex"},{"@type":"ListItem","position":10,"name":"Unicode 이스케이프","url":"https://cooingpop.github.io/toolbox/#unicode"},{"@type":"ListItem","position":11,"name":"해시 생성기","url":"https://cooingpop.github.io/toolbox/#hash"},{"@type":"ListItem","position":12,"name":"UUID 생성기","url":"https://cooingpop.github.io/toolbox/#uuid"},{"@type":"ListItem","position":13,"name":"비밀번호 생성기","url":"https://cooingpop.github.io/toolbox/#password"},{"@type":"ListItem","position":14,"name":"HMAC 생성기","url":"https://cooingpop.github.io/toolbox/#hmac"},{"@type":"ListItem","position":15,"name":"MD5 해시","url":"https://cooingpop.github.io/toolbox/#md5"},{"@type":"ListItem","position":16,"name":"Unix 타임스탬프","url":"https://cooingpop.github.io/toolbox/#timestamp"},{"@type":"ListItem","position":17,"name":"Cron 표현식 해석기","url":"https://cooingpop.github.io/toolbox/#cron"},{"@type":"ListItem","position":18,"name":"타임존 변환기","url":"https://cooingpop.github.io/toolbox/#timezone"},{"@type":"ListItem","position":19,"name":"날짜 차이 계산기","url":"https://cooingpop.github.io/toolbox/#datediff"},{"@type":"ListItem","position":20,"name":"정규식 테스터","url":"https://cooingpop.github.io/toolbox/#regex"},{"@type":"ListItem","position":21,"name":"케이스 변환기","url":"https://cooingpop.github.io/toolbox/#case"},{"@type":"ListItem","position":22,"name":"텍스트 Diff 비교","url":"https://cooingpop.github.io/toolbox/#diff"},{"@type":"ListItem","position":23,"name":"텍스트 통계","url":"https://cooingpop.github.io/toolbox/#textstats"},{"@type":"ListItem","position":24,"name":"줄 정렬/중복 제거","url":"https://cooingpop.github.io/toolbox/#lines"},{"@type":"ListItem","position":25,"name":"Lorem Ipsum 생성기","url":"https://cooingpop.github.io/toolbox/#lorem"},{"@type":"ListItem","position":26,"name":"색상 변환기","url":"https://cooingpop.github.io/toolbox/#color"},{"@type":"ListItem","position":27,"name":"대비 검사기 (WCAG)","url":"https://cooingpop.github.io/toolbox/#contrast"},{"@type":"ListItem","position":28,"name":"그라디언트 생성기","url":"https://cooingpop.github.io/toolbox/#gradient"},{"@type":"ListItem","position":29,"name":"Cubic-bezier 에디터","url":"https://cooingpop.github.io/toolbox/#bezier"},{"@type":"ListItem","position":30,"name":"box-shadow 생성기","url":"https://cooingpop.github.io/toolbox/#boxshadow"},{"@type":"ListItem","position":31,"name":"진법 변환기","url":"https://cooingpop.github.io/toolbox/#radix"},{"@type":"ListItem","position":32,"name":"QR 코드 생성기","url":"https://cooingpop.github.io/toolbox/#qrcode"},{"@type":"ListItem","position":33,"name":"이미지 리사이즈/압축","url":"https://cooingpop.github.io/toolbox/#imageresize"}]}]}</script>
   <script>
     // FOUC 방지: CSS 로드 전에 테마 결정
     (function () {
@@ -31,19 +57,214 @@
 
   <div class="layout">
     <nav id="sidebar" class="sidebar" aria-label="도구 목록">
-      <!-- app.js가 카테고리/도구 링크를 렌더링 -->
+      <!-- app.js가 검색창 + 카테고리/도구 링크를 렌더링 -->
     </nav>
     <div id="sidebar-backdrop" class="sidebar-backdrop" hidden></div>
     <main id="main" class="main">
-      <section id="view-home" class="view" hidden>
+      <!-- 홈은 정적 마크업: JS 미실행 크롤러(GPTBot, ClaudeBot 등)도 전체 도구 목록을 읽을 수 있다.
+           ⚠️ js/app.js의 CATEGORIES에 도구를 추가하면 아래 그리드에도 같은 카드를 추가할 것. -->
+      <section id="view-home" class="view">
         <div class="tool-header">
-          <h1>DevTools Hub</h1>
+          <h1>DevTools Hub — 무료 온라인 개발자 도구 모음</h1>
           <p class="tool-desc">
-            개발자·디자이너·프론트엔드가 매일 쓰는 유틸리티 모음.
+            개발자·디자이너·프론트엔드가 매일 쓰는 유틸리티 33종.
             모든 처리는 <strong>브라우저 안에서만</strong> 이루어지며 어떤 데이터도 서버로 전송되지 않습니다.
+            설치·회원가입 없이 무료로 사용하세요.
           </p>
         </div>
-        <div id="home-grid" class="home-grid"></div>
+        <div id="home-grid" class="home-grid">
+        <a class="home-card" href="#json">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🧾</span><span class="card-title">JSON 포매터</span></div>
+          <div class="card-desc">Pretty / Minify / 검증 + 트리 뷰</div>
+          <div class="card-cat">포맷 &amp; 변환</div>
+        </a>
+        <a class="home-card" href="#xml">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">📐</span><span class="card-title">XML 포매터</span></div>
+          <div class="card-desc">들여쓰기 정리 + 유효성 검사</div>
+          <div class="card-cat">포맷 &amp; 변환</div>
+        </a>
+        <a class="home-card" href="#yaml">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🔁</span><span class="card-title">JSON ↔ YAML 변환</span></div>
+          <div class="card-desc">양방향 변환 (자체 구현)</div>
+          <div class="card-cat">포맷 &amp; 변환</div>
+        </a>
+        <a class="home-card" href="#sql">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🗃️</span><span class="card-title">SQL 포매터</span></div>
+          <div class="card-desc">키워드 개행/들여쓰기 정리</div>
+          <div class="card-cat">포맷 &amp; 변환</div>
+        </a>
+        <a class="home-card" href="#base64">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🔤</span><span class="card-title">Base64 인코더/디코더</span></div>
+          <div class="card-desc">텍스트·이미지 ↔ Base64 (UTF-8 안전)</div>
+          <div class="card-cat">인코딩 &amp; 디코딩</div>
+        </a>
+        <a class="home-card" href="#url">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🔗</span><span class="card-title">URL 인코더/디코더</span></div>
+          <div class="card-desc">컴포넌트/전체 URI 모드</div>
+          <div class="card-cat">인코딩 &amp; 디코딩</div>
+        </a>
+        <a class="home-card" href="#jwt">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🎫</span><span class="card-title">JWT 디코더</span></div>
+          <div class="card-desc">header/payload 디코딩 + HMAC 서명 검증</div>
+          <div class="card-cat">인코딩 &amp; 디코딩</div>
+        </a>
+        <a class="home-card" href="#entity">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🏷️</span><span class="card-title">HTML 엔티티</span></div>
+          <div class="card-desc">&amp;lt; ↔ &lt; 인코딩/디코딩</div>
+          <div class="card-cat">인코딩 &amp; 디코딩</div>
+        </a>
+        <a class="home-card" href="#hex">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🔢</span><span class="card-title">Hex ↔ 텍스트</span></div>
+          <div class="card-desc">UTF-8 바이트 기준 16진수 변환</div>
+          <div class="card-cat">인코딩 &amp; 디코딩</div>
+        </a>
+        <a class="home-card" href="#unicode">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">✳️</span><span class="card-title">Unicode 이스케이프</span></div>
+          <div class="card-desc">\uXXXX ↔ 문자 변환</div>
+          <div class="card-cat">인코딩 &amp; 디코딩</div>
+        </a>
+        <a class="home-card" href="#hash">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🔒</span><span class="card-title">해시 생성기</span></div>
+          <div class="card-desc">SHA-1/256/384/512 동시 출력</div>
+          <div class="card-cat">해시 &amp; 생성</div>
+        </a>
+        <a class="home-card" href="#uuid">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🆔</span><span class="card-title">UUID 생성기</span></div>
+          <div class="card-desc">UUID v4, 개수·대소문자 옵션</div>
+          <div class="card-cat">해시 &amp; 생성</div>
+        </a>
+        <a class="home-card" href="#password">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🔑</span><span class="card-title">비밀번호 생성기</span></div>
+          <div class="card-desc">암호학적 난수, 길이·문자셋 옵션</div>
+          <div class="card-cat">해시 &amp; 생성</div>
+        </a>
+        <a class="home-card" href="#hmac">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🛡️</span><span class="card-title">HMAC 생성기</span></div>
+          <div class="card-desc">HMAC-SHA256/384/512, hex·Base64</div>
+          <div class="card-cat">해시 &amp; 생성</div>
+        </a>
+        <a class="home-card" href="#md5">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🧮</span><span class="card-title">MD5 해시</span></div>
+          <div class="card-desc">순수 JS 구현 (체크섬·레거시용)</div>
+          <div class="card-cat">해시 &amp; 생성</div>
+        </a>
+        <a class="home-card" href="#timestamp">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">⏱️</span><span class="card-title">Unix 타임스탬프</span></div>
+          <div class="card-desc">초/밀리초 자동 감지, 타임존·상대시간</div>
+          <div class="card-cat">시간 &amp; 날짜</div>
+        </a>
+        <a class="home-card" href="#cron">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">⏰</span><span class="card-title">Cron 표현식 해석기</span></div>
+          <div class="card-desc">자연어 설명 + 다음 실행 시각</div>
+          <div class="card-cat">시간 &amp; 날짜</div>
+        </a>
+        <a class="home-card" href="#timezone">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🌍</span><span class="card-title">타임존 변환기</span></div>
+          <div class="card-desc">여러 도시 시각 동시 표시</div>
+          <div class="card-cat">시간 &amp; 날짜</div>
+        </a>
+        <a class="home-card" href="#datediff">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">📅</span><span class="card-title">날짜 차이 계산기</span></div>
+          <div class="card-desc">두 날짜 사이 일/시/분 + 달력 기준</div>
+          <div class="card-cat">시간 &amp; 날짜</div>
+        </a>
+        <a class="home-card" href="#regex">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🎯</span><span class="card-title">정규식 테스터</span></div>
+          <div class="card-desc">매치 하이라이트 + 캡처 그룹</div>
+          <div class="card-cat">텍스트 &amp; 정규식</div>
+        </a>
+        <a class="home-card" href="#case">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🔠</span><span class="card-title">케이스 변환기</span></div>
+          <div class="card-desc">camel/snake/kebab/Pascal 등 동시 변환</div>
+          <div class="card-cat">텍스트 &amp; 정규식</div>
+        </a>
+        <a class="home-card" href="#diff">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🔀</span><span class="card-title">텍스트 Diff 비교</span></div>
+          <div class="card-desc">라인 단위 diff (LCS)</div>
+          <div class="card-cat">텍스트 &amp; 정규식</div>
+        </a>
+        <a class="home-card" href="#textstats">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">📊</span><span class="card-title">텍스트 통계</span></div>
+          <div class="card-desc">글자·단어·줄·바이트 수</div>
+          <div class="card-cat">텍스트 &amp; 정규식</div>
+        </a>
+        <a class="home-card" href="#lines">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">📑</span><span class="card-title">줄 정렬/중복 제거</span></div>
+          <div class="card-desc">sort / unique / reverse</div>
+          <div class="card-cat">텍스트 &amp; 정규식</div>
+        </a>
+        <a class="home-card" href="#lorem">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">📝</span><span class="card-title">Lorem Ipsum 생성기</span></div>
+          <div class="card-desc">문단·문장·단어 단위 채움 텍스트</div>
+          <div class="card-cat">텍스트 &amp; 정규식</div>
+        </a>
+        <a class="home-card" href="#color">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🎨</span><span class="card-title">색상 변환기</span></div>
+          <div class="card-desc">HEX ↔ RGB(A) ↔ HSL(A) + OKLCH</div>
+          <div class="card-cat">색상 &amp; 디자인</div>
+        </a>
+        <a class="home-card" href="#contrast">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🌓</span><span class="card-title">대비 검사기 (WCAG)</span></div>
+          <div class="card-desc">대비비율 + AA/AAA 통과 여부</div>
+          <div class="card-cat">색상 &amp; 디자인</div>
+        </a>
+        <a class="home-card" href="#gradient">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🌈</span><span class="card-title">그라디언트 생성기</span></div>
+          <div class="card-desc">CSS gradient 코드 + 프리뷰</div>
+          <div class="card-cat">색상 &amp; 디자인</div>
+        </a>
+        <a class="home-card" href="#bezier">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">〰️</span><span class="card-title">Cubic-bezier 에디터</span></div>
+          <div class="card-desc">드래그 곡선 + CSS 타이밍 함수</div>
+          <div class="card-cat">색상 &amp; 디자인</div>
+        </a>
+        <a class="home-card" href="#boxshadow">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🔲</span><span class="card-title">box-shadow 생성기</span></div>
+          <div class="card-desc">다중 레이어 그림자 + 프리뷰</div>
+          <div class="card-cat">색상 &amp; 디자인</div>
+        </a>
+        <a class="home-card" href="#radix">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🔟</span><span class="card-title">진법 변환기</span></div>
+          <div class="card-desc">2/8/10/16진수 상호 변환 (BigInt)</div>
+          <div class="card-cat">기타</div>
+        </a>
+        <a class="home-card" href="#qrcode">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🔳</span><span class="card-title">QR 코드 생성기</span></div>
+          <div class="card-desc">텍스트·URL → QR (PNG 다운로드)</div>
+          <div class="card-cat">기타</div>
+        </a>
+        <a class="home-card" href="#imageresize">
+          <div class="card-head"><span class="card-icon" aria-hidden="true">🖼️</span><span class="card-title">이미지 리사이즈/압축</span></div>
+          <div class="card-desc">Canvas 기반, JPEG/WebP/PNG</div>
+          <div class="card-cat">기타</div>
+        </a>
+        </div>
+        <section class="home-about">
+          <h2>DevTools Hub 소개</h2>
+          <p>
+            DevTools Hub는 <strong>JSON 포매터·뷰어</strong>(pretty print, minify, 트리 뷰),
+            <strong>JWT 디코더</strong>(서명 검증 포함), <strong>Base64 / URL / HTML 엔티티 / Hex / Unicode 인코딩 변환</strong>,
+            <strong>SHA·HMAC·MD5 해시 생성</strong>, <strong>UUID·비밀번호 생성</strong>,
+            <strong>Unix 타임스탬프 변환</strong>, <strong>Cron 표현식 해석</strong>(한국어 설명 + 다음 실행 시각),
+            <strong>타임존 변환</strong>, <strong>정규식 테스트</strong>(매치 하이라이트·캡처 그룹),
+            <strong>텍스트 Diff 비교</strong>, <strong>케이스 변환</strong>(camelCase/snake_case 등),
+            <strong>색상 변환</strong>(HEX/RGB/HSL/OKLCH), <strong>WCAG 대비 검사</strong>,
+            <strong>CSS 그라디언트·cubic-bezier·box-shadow 생성</strong>,
+            <strong>진법 변환</strong>, <strong>QR 코드 생성</strong>, <strong>이미지 리사이즈·압축</strong>까지
+            33가지 도구를 한 곳에서 제공하는 웹 기반 개발자 도구 모음입니다.
+          </p>
+          <p>
+            프레임워크와 빌드 스텝 없이 순수 Vanilla JavaScript와 브라우저 네이티브 API(Web Crypto, Intl, Canvas)로 만들어졌고,
+            오픈소스(MIT)로 <a href="https://github.com/cooingpop/toolbox" rel="noopener">GitHub</a>에 공개되어 있습니다.
+            JWT 토큰·비밀번호·파일 같은 민감한 입력도 네트워크로 전송되지 않아 안심하고 사용할 수 있습니다.
+          </p>
+          <p lang="en">
+            DevTools Hub is a free collection of 33 online developer utilities — JSON formatter,
+            JWT decoder, Base64 encoder, cron expression parser, regex tester, color converter,
+            hash/UUID/password generators, QR code generator, image resizer and more.
+            Everything runs 100% client-side in your browser: no signup, no install, no data ever leaves your device.
+          </p>
+        </section>
       </section>
       <!-- 도구별 섹션은 app.js가 생성 -->
     </main>
