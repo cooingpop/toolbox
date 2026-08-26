@@ -1,7 +1,7 @@
 // 도구 레지스트리 — 단일 원본.
-// ⚠️ 여기를 수정하면 scripts 없이 손으로 만들던 index.html 정적 홈 그리드·JSON-LD·llms.txt도
-//    dev 노트(README)의 생성 스크립트로 재생성해서 함께 커밋할 것.
-// DOM 의존이 없어 Node에서도 import 가능 (SEO 산출물 생성용).
+// ⚠️ 여기를 수정한 뒤에는 `node scripts/build-seo.mjs`를 실행해
+//    index.html의 정적 홈 그리드·JSON-LD와 llms.txt를 재생성하고 함께 커밋할 것.
+// DOM 의존이 없어 Node에서도 import 가능 (위 스크립트가 사용).
 
 export const CATEGORIES = [
   {
@@ -36,6 +36,7 @@ export const CATEGORIES = [
       { id: 'hash', icon: '🔒', name: '해시 생성기', nameEn: 'Hash Generator', desc: 'SHA-1/256/384/512 동시 출력', descEn: 'SHA-1/256/384/512 at once' },
       { id: 'uuid', icon: '🆔', name: 'UUID 생성기', nameEn: 'UUID Generator', desc: 'UUID v4, 개수·대소문자 옵션', descEn: 'UUID v4 with options' },
       { id: 'password', icon: '🔑', name: '비밀번호 생성기', nameEn: 'Password Generator', desc: '암호학적 난수, 길이·문자셋 옵션', descEn: 'Cryptographically secure random' },
+      { id: 'secret', icon: '🗝️', name: '시크릿 키 생성기', nameEn: 'Secret Key Generator', desc: 'openssl rand 대체 — Hex/Base64 키', descEn: 'openssl rand replacement — hex/Base64 keys' },
       { id: 'hmac', icon: '🛡️', name: 'HMAC 생성기', nameEn: 'HMAC Generator', desc: 'HMAC-SHA256/384/512, hex·Base64', descEn: 'HMAC-SHA256/384/512, hex/Base64' },
       { id: 'md5', icon: '🧮', name: 'MD5 해시', nameEn: 'MD5 Hash', desc: '순수 JS 구현 (체크섬·레거시용)', descEn: 'Pure JS, checksum/legacy use' },
     ],

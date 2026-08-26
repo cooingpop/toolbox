@@ -2,6 +2,7 @@
 //        즐겨찾기·최근 사용, URL 입력 공유, PWA 등록
 import { $, $$, escapeHtml } from './utils/dom.js';
 import { copyText } from './utils/clipboard.js';
+import { bindCharCounters } from './utils/counter.js';
 import { CATEGORIES, SHAREABLE } from './registry.js';
 
 const THEME_KEY = 'devtools-hub-theme';
@@ -394,6 +395,7 @@ async function route() {
       const mod = await import(`./tools/${id}.js`);
       mod.init(section);
       injectShareButton(id, section);
+      bindCharCounters(section);
     } catch (err) {
       section.innerHTML = `<p class="error-text">도구를 불러오지 못했습니다: ${escapeHtml(String(err))}</p>`;
       console.error(err);

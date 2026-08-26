@@ -1,6 +1,6 @@
 # 🧰 DevTools Hub
 
-개발자·디자이너·프론트엔드가 매일 쓰는 유틸리티 41종을 한 페이지에 모은 **순수 정적 웹 도구 모음**입니다.
+개발자·디자이너·프론트엔드가 매일 쓰는 유틸리티 42종을 한 페이지에 모은 **순수 정적 웹 도구 모음**입니다.
 
 🔗 **배포 URL:** https://cooingpop.github.io/toolbox/
 
@@ -14,6 +14,7 @@ JWT 토큰, 해시 입력, 파일 등 모든 입력은 이 페이지를 벗어�
 > ⭐ 홈 카드의 별을 눌러 즐겨찾기, 최근 사용 도구는 홈 상단에 자동 표시됩니다.
 > 🔗 각 도구의 "입력 공유 링크"로 입력값까지 담긴 URL을 공유할 수 있습니다.
 > 📱 PWA를 지원해 홈 화면에 설치하면 오프라인에서도 동작합니다. 상단바 EN 버튼으로 영어 UI(셸) 전환.
+> 🔢 모든 도구의 입력·결과란에 실시간 글자 수(자 · UTF-8 바이트 · 줄 수)가 표시됩니다.
 
 ## 도구 목록
 
@@ -40,6 +41,7 @@ JWT 토큰, 해시 입력, 파일 등 모든 입력은 이 페이지를 벗어�
 - **비밀번호/랜덤 문자열 생성기** — `crypto.getRandomValues` 기반. 길이·문자셋·혼동 문자 제외 옵션 + 엔트로피 표시.
 - **HMAC 생성기** — HMAC-SHA256/384/512/SHA-1을 hex와 Base64로 출력.
 - **MD5 해시** — 순수 JS 자체 구현(RFC 1321). 체크섬·레거시 호환 용도 (암호학적으로는 안전하지 않음).
+- **시크릿 키 생성기** — `openssl rand -hex 32`를 터미널 없이 대체. 같은 난수 바이트를 Hex/Base64/Base64URL로 동시 출력하고, 바이트 수 지정(8~256)·동등한 openssl 명령·`.env` 스니펫을 제공합니다.
 
 ### 시간 & 날짜
 - **Unix 타임스탬프 변환기** — 초/밀리초 자동 감지. ISO 8601·로컬·선택 타임존·상대 시간 표시, 날짜 → 타임스탬프 역변환.
@@ -103,11 +105,12 @@ npx serve .
 ```
 index.html          # 셸 + SEO (메타/OG/JSON-LD + 정적 홈 그리드 — 크롤러도 도구 목록을 읽음)
 js/registry.js      # 도구 레지스트리 단일 원본 (Node에서도 import — SEO 산출물 생성용)
+scripts/build-seo.mjs # 레지스트리 → 홈 그리드·JSON-LD·llms.txt 재생성
 manifest.webmanifest, sw.js  # PWA (설치 + 오프라인, 네트워크 우선 캐시)
 css/styles.css      # 디자인 토큰 + 공통 + 도구별 스타일
 js/app.js           # 해시 라우팅, 테마 토글, 사이드바(검색)
 js/tools/*.js       # 도구별 모듈 (export function init(container))
-js/utils/           # DOM 헬퍼, 클립보드+토스트
+js/utils/           # DOM 헬퍼, 클립보드+토스트, 글자 수 카운터
 vendor/             # 단일 파일 라이브러리 — qrcode.mjs (MIT) 1개
 assets/og-image.png # OG/트위터 카드 이미지 (1200×630)
 robots.txt          # 검색·AI 크롤러(GPTBot, ClaudeBot 등) 허용 + sitemap 참조
@@ -115,7 +118,14 @@ sitemap.xml         # 사이트맵
 llms.txt            # AI 에이전트용 사이트 요약 (도구 목록 + 프라이버시)
 ```
 
-> ⚠️ 도구를 추가하면 `js/app.js`의 CATEGORIES와 함께 `index.html`의 정적 홈 그리드·JSON-LD, `llms.txt`도 갱신해야 합니다 (SEO용 정적 사본).
+### 도구 추가하기
+
+1. `js/tools/<id>.js`에 `export function init(container)` 작성
+2. `js/registry.js`의 해당 카테고리에 항목 추가 (id·아이콘·한/영 이름·설명)
+3. `node scripts/build-seo.mjs` 실행 → `index.html`의 정적 홈 그리드·JSON-LD와 `llms.txt`가 자동 갱신됩니다
+4. 입력값을 URL로 공유하게 하려면 `registry.js`의 `SHAREABLE`에 대표 입력 셀렉터를 추가
+
+라우팅·사이드바·검색·즐겨찾기·글자 수 카운터는 자동으로 붙습니다.
 
 ## 라이선스
 

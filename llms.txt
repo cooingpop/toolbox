@@ -1,8 +1,8 @@
 # DevTools Hub
 
-> 개발자·디자이너·프론트엔드용 무료 온라인 유틸리티 41종. 모든 처리는 브라우저 안에서만 이루어지며 어떤 데이터도 서버로 전송되지 않습니다 (JWT·해시·파일 입력 포함). Vanilla JS + 브라우저 네이티브 API, 빌드 스텝·회원가입·설치 없음. PWA로 설치해 오프라인 사용 가능.
+> 개발자·디자이너·프론트엔드용 무료 온라인 유틸리티 모음. 모든 처리는 브라우저 안에서만 이루어지며 어떤 데이터도 서버로 전송되지 않습니다 (JWT·해시·시크릿 키·파일 입력 포함). Vanilla JS + 브라우저 네이티브 API, 빌드 스텝·회원가입·설치 없음. PWA로 설치해 오프라인 사용 가능.
 >
-> Free online developer utilities (JSON formatter, JWT decoder, Base64, cron parser, regex tester, color converter, cURL-to-code, JSON diff and more). 100% client-side — no data ever leaves the browser. No signup, no install.
+> Free online developer utilities (JSON formatter, JWT decoder, Base64, cron parser, regex tester, color converter, cURL-to-code, JSON diff, secret key generator and more). 100% client-side — no data ever leaves the browser. No signup, no install.
 
 URL: https://cooingpop.github.io/toolbox/
 
@@ -30,6 +30,7 @@ URL: https://cooingpop.github.io/toolbox/
 - [해시 생성기](https://cooingpop.github.io/toolbox/#hash): SHA-1/256/384/512 동시 출력
 - [UUID 생성기](https://cooingpop.github.io/toolbox/#uuid): UUID v4, 개수·대소문자 옵션
 - [비밀번호 생성기](https://cooingpop.github.io/toolbox/#password): 암호학적 난수, 길이·문자셋 옵션
+- [시크릿 키 생성기](https://cooingpop.github.io/toolbox/#secret): openssl rand 대체 — Hex/Base64 키
 - [HMAC 생성기](https://cooingpop.github.io/toolbox/#hmac): HMAC-SHA256/384/512, hex·Base64
 - [MD5 해시](https://cooingpop.github.io/toolbox/#md5): 순수 JS 구현 (체크섬·레거시용)
 
