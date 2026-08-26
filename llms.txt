@@ -50,6 +50,7 @@ URL: https://cooingpop.github.io/toolbox/
 - [줄 정렬/중복 제거](https://cooingpop.github.io/toolbox/#lines): sort / unique / reverse
 - [Lorem Ipsum 생성기](https://cooingpop.github.io/toolbox/#lorem): 문단·문장·단어 단위 채움 텍스트
 - [Markdown 미리보기](https://cooingpop.github.io/toolbox/#markdown): 실시간 렌더 + HTML 출력
+- [문자열 자르기](https://cooingpop.github.io/toolbox/#slice): 앞/뒤 N자만 남기거나 잘라내기
 - [Slug 생성기](https://cooingpop.github.io/toolbox/#slug): 제목 → URL slug (한글 로마자 변환)
 
 ## 색상 & 디자인 (Color & Design)
